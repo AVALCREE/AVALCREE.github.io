@@ -55,7 +55,7 @@
             max-width: 400px;
         }
         button img {
-            width: 40px; /* Smaller GIF size */
+            width: 40px;
             height: 40px;
             margin-right: 15px;
         }
@@ -92,6 +92,7 @@
         }
         .icon.unity { top: 10%; left: 10%; }
         .icon.gorilla-tag { top: 70%; left: 70%; }
+        .icon.rolling-image { top: 40%; left: 40%; }
         @keyframes moveAround {
             0% { transform: translate(0, 0); }
             25% { transform: translate(100px, 100px); }
@@ -115,7 +116,7 @@
             z-index: 2000;
         }
         .jumpscare img {
-            width: 100%; /* Cover the entire screen */
+            width: 100%;
             height: auto;
             max-height: 100vh;
             object-fit: cover;
@@ -191,6 +192,9 @@
     <a href="https://www.gorillatagvr.com/" target="_blank">
         <img src="https://cdn2.steamgriddb.com/logo_thumb/a66f8f0921301a9b92d41aec1644b0a5.png" alt="Gorilla Tag" class="icon gorilla-tag">
     </a>
+    
+    <!-- Rolling image -->
+    <img src="https://raw.githubusercontent.com/AVALCREE/avalcree.github.io/master/screens/cet-removebg-preview.png" alt="Rolling Image" class="icon rolling-image">
 
     <!-- Jumpscare overlay -->
     <div class="jumpscare" id="jumpscare">
@@ -200,9 +204,41 @@
         <button onclick="handleJumpscareResponse('no')">No</button>
     </div>
 
+    <!-- Audio elements for sound effects -->
+    <audio id="jumpscare-sound" src="https://www.myinstants.com/media/sounds/amogus.mp3" preload="auto"></audio>
+    <!-- Additional sound effects -->
+    <audio id="extra-sound" src="https://www.myinstants.com/media/sounds/vine-boom.mp3" preload="auto"></audio>
+
     <script>
-        (function() {
-            let _0x3b58=["\x64\x6F\x63\x75\x6D\x65\x6E\x74\x2E\x67\x65\x74\x45\x4C\x45\x4D\x45\x4E\x54\x42\x79\x49\x44\x28\x27\x6A\x75\x6D\x70\x73\x63\x61\x72\x65\x27\x29","\x73\x68\x6F\x77\x49\x63\x6F\x6E\x73","\x64\x6F\x63\x75\x6D\x65\x6E\x74\x2E\x67\x65\x74\x45\x4C\x45\x4D\x45\x4E\x54\x42\x79\x49\x44\x28\x27\x6A\x75\x6D\x70\x73\x63\x61\x72\x65\x27\x29","\x73\x68\x6F\x77\x49\x63\x6F\x6E\x73","\x74\x68\x65\x20\x6A\x75\x6D\x70\x73\x63\x61\x72\x65\x20\x6F\x76\x65\x72\x6C\x61\x79","\x67\x65\x74\x45\x4C\x45\x4D\x45\x4E\x54\x42\x79\x49\x44\x28\x27\x74\x6F\x67\x67\x6C\x65\x4A\x75\x6D\x70\x73\x63\x61\x72\x65\x27\x29","\x64\x69\x73\x70\x6C\x61\x79","\x66\x6C\x65\x78","\x77\x69\x6E\x64\x6F\x77","\x6C\x6F\x67","\x72\x65\x73\x70\x6F\x6E\x73\x65","\x74\x68\x65\x20\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x20\x62\x65\x66\x6F\x72\x65","\x74\x68\x65\x20\x66\x6C\x6F\x61\x74\x20\x63\x6F\x6C\x6F\x72","\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x6A\x75\x6D\x70\x73\x63\x61\x72\x65\x4F\x76\x65\x72\x6C\x61\x79","\x66\x6C\x65\x78","\x64\x69\x73\x70\x6C\x61\x79","\x6E\x6F","\x66\x69\x72\x73\x74","\x70\x61\x67\x65","\x66\x69\x72\x73\x74\x2E\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x73\x68\x6F\x77\x49\x63\x6F\x6E\x73","\x70\x61\x67\x65","\x66\x69\x72\x73\x74\x2E\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x66\x69\x72\x73\x74\x2E\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x6A\x75\x6D\x70\x73\x63\x61\x72\x65\x4F\x76\x65\x72\x6C\x61\x79","\x66\x69\x72\x73\x74\x2E\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73","\x72\x65\x73\x70\x6F\x6E\x73\x65","\x74\x6F\x67\x67\x6C\x65\x4A\x75\x6D\x70\x73\x63\x61\x72\x65","\x66\x69\x72\x73\x74\x2E\x63\x68\x61\x6C\x6C\x65\x6E\x67\x65\x73"];function showIcons(){document.querySelectorAll('.icon').forEach(icon=>{icon.style.display='block';});}setTimeout(showIcons,600000);setTimeout(()=>{if(!jumpscareShown){document.getElementById('jumpscare').style.display='flex';jumpscareShown=true;}},30000);function toggleJumpscare(){const jumpscareDiv=document.getElementById('jumpscare');if(jumpscareDiv.style.display==='flex'){jumpscareDiv.style.display='none';}else{jumpscareDiv.style.display='flex';}}function handleJumpscareResponse(response){const jumpscareDiv=document.getElementById('jumpscare');if(response==='yes'){jumpscareDiv.innerHTML=`<img src="https://gifdb.com/images/high/fnaf-cat-jumpscare-meme-vezf6psx230cy9nv.gif" alt="Cat Jumpscare"><div>Boo :)</div><button onclick="closeJumpscare()">Close</button>`;}else{jumpscareDiv.innerHTML=`<div>Close</div><button onclick="closeJumpscare()">Close</button>`;}}function closeJumpscare(){document.getElementById('jumpscare').style.display='none';}})();
+        let jumpscareShown = false;
+        function showIcons() {
+            document.querySelector('.icon.unity').style.display = 'block';
+            document.querySelector('.icon.gorilla-tag').style.display = 'block';
+            document.querySelector('.icon.rolling-image').style.display = 'block';
+        }
+
+        function toggleJumpscare() {
+            const jumpscareElement = document.getElementById('jumpscare');
+            jumpscareElement.style.display = jumpscareElement.style.display === 'flex' ? 'none' : 'flex';
+            document.getElementById('jumpscare-sound').play();
+        }
+
+        function handleJumpscareResponse(response) {
+            alert(`You responded: ${response}`);
+            document.getElementById('jumpscare').style.display = 'none';
+            jumpscareShown = true;
+        }
+
+        // Show rolling image after 10 minutes
+        setTimeout(() => {
+            document.querySelector('.icon.rolling-image').style.display = 'block';
+        }, 600000); // 600,000 ms = 10 minutes
+
+        // Play sound when the rolling image is shown
+        setTimeout(() => {
+            document.getElementById('extra-sound').play();
+        }, 600000); // 600,000 ms = 10 minutes
     </script>
 </body>
 </html>
+
