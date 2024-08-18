@@ -42,22 +42,22 @@
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: 2px solid white;
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 10px 20px;
+            font-size: 1rem;
             cursor: pointer;
-            margin: 10px;
+            margin: 5px;
             border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s, border-color 0.3s;
             width: 100%;
-            max-width: 400px;
+            max-width: 300px;
         }
         button img {
-            width: 40px;
-            height: 40px;
-            margin-right: 15px;
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
         }
         button:hover {
             background-color: rgba(255, 255, 255, 0.4);
@@ -85,14 +85,14 @@
         }
         .icon {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 100px;
+            height: 100px;
             animation: moveAround 10s linear infinite;
             display: none;
         }
         .icon.unity { top: 10%; left: 10%; }
         .icon.gorilla-tag { top: 70%; left: 70%; }
-        .icon.rolling-image { top: 40%; left: 40%; }
+        .icon.rolling-image { top: 40%; left: 40%; width: 150px; height: 150px; }
         @keyframes moveAround {
             0% { transform: translate(0, 0); }
             25% { transform: translate(100px, 100px); }
@@ -167,9 +167,9 @@
             <button onclick="window.location.href='https://avalcree.github.io/projectlzr';">
                 Leave a Message To My Email
             </button>
-            <!-- New 8-bit Minigame button -->
-            <button onclick="window.location.href='https://avalcree.github.io/mimigame';">
-                8-bit Minigame
+            <!-- New Chrome Dino button -->
+            <button onclick="window.location.href='https://avalcree.github.io/dino';">
+                Chrome Dino
             </button>
         </div>
         <div class="shoutout-text">
@@ -210,35 +210,36 @@
     <audio id="extra-sound" src="https://www.myinstants.com/media/sounds/vine-boom.mp3" preload="auto"></audio>
 
     <script>
-        let jumpscareShown = false;
         function showIcons() {
-            document.querySelector('.icon.unity').style.display = 'block';
-            document.querySelector('.icon.gorilla-tag').style.display = 'block';
-            document.querySelector('.icon.rolling-image').style.display = 'block';
+            const icons = document.querySelectorAll('.icon');
+            icons.forEach(icon => {
+                icon.style.display = 'block';
+            });
         }
 
         function toggleJumpscare() {
-            const jumpscareElement = document.getElementById('jumpscare');
-            jumpscareElement.style.display = jumpscareElement.style.display === 'flex' ? 'none' : 'flex';
-            document.getElementById('jumpscare-sound').play();
+            const jumpscare = document.getElementById('jumpscare');
+            const sound = document.getElementById('jumpscare-sound');
+            jumpscare.style.display = 'flex';
+            sound.play();
         }
 
         function handleJumpscareResponse(response) {
-            alert(`You responded: ${response}`);
+            alert(`You clicked "${response}"!`);
             document.getElementById('jumpscare').style.display = 'none';
-            jumpscareShown = true;
         }
 
-        // Show rolling image after 10 minutes
-        setTimeout(() => {
-            document.querySelector('.icon.rolling-image').style.display = 'block';
-        }, 600000); // 600,000 ms = 10 minutes
+        function playExtraSound() {
+            const sound = document.getElementById('extra-sound');
+            sound.play();
+        }
 
-        // Play sound when the rolling image is shown
+        // Show the rolling image after 10 minutes
         setTimeout(() => {
-            document.getElementById('extra-sound').play();
-        }, 600000); // 600,000 ms = 10 minutes
+            const rollingImage = document.querySelector('.icon.rolling-image');
+            rollingImage.style.display = 'block';
+        }, 600000); // 10 minutes
+
     </script>
 </body>
 </html>
-
