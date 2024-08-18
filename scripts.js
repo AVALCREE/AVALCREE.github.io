@@ -1,10 +1,11 @@
-// Example user data
+// Example user data - replace with dynamic user data if needed
 const user = {
     name: 'User1',
     country: 'USA',
     emoji: '🇺🇸'
 };
 
+// Function to load messages from localStorage and display them
 function loadMessages() {
     const messagesContainer = document.getElementById('messages');
     const messages = JSON.parse(localStorage.getItem('messages')) || [];
@@ -17,12 +18,14 @@ function loadMessages() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
+// Function to save messages to localStorage
 function saveMessage(message) {
     const messages = JSON.parse(localStorage.getItem('messages')) || [];
     messages.push(message);
     localStorage.setItem('messages', JSON.stringify(messages));
 }
 
+// Function to send message using EmailJS
 async function sendMessage() {
     const messageInput = document.getElementById('message');
     const messageText = messageInput.value.trim();
@@ -53,4 +56,5 @@ async function sendMessage() {
     }
 }
 
+// Load messages when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', loadMessages);
