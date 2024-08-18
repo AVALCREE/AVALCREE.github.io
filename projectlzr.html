@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-color: #f9f9f9;
         }
         #form-container {
             width: 100%;
@@ -20,7 +21,7 @@
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
         }
         iframe {
             width: 100%;
@@ -28,9 +29,24 @@
             border: none;
             border-radius: 8px;
         }
+        #google-translate {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    <div id="google-translate">
+        <!-- Google Translate Widget -->
+        <div id="google_translate_element"></div>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en'
+                }, 'google_translate_element');
+            }
+        </script>
+        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </div>
     <div id="form-container">
         <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdck8MMwKH2D6XQVJtqTCNXTXQf3jtHMl_AI_GIaRaxrumkyg/viewform?usp=sf_link" title="Contact Form"></iframe>
     </div>
