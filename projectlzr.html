@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Messaging System</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include EmailJS SDK from CDN -->
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 </head>
 <body>
@@ -15,10 +16,11 @@
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
+    <!-- Include your custom JavaScript file -->
     <script src="scripts.js"></script>
     <script>
-        // Initialize EmailJS
-        emailjs.init('I3Y03QAeS8t_gru3w'); // Replace 'YOUR_USER_ID' with your EmailJS user ID
+        // Initialize EmailJS with your User ID
+        emailjs.init('I3Y03QAeS8t_gru3w'); // Replace 'I3Y03QAeS8t_gru3w' with your actual EmailJS User ID
     </script>
 </body>
 </html>
