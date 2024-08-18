@@ -25,24 +25,27 @@ function saveMessage(message) {
     localStorage.setItem('messages', JSON.stringify(messages));
 }
 
-// Function to handle form submission
-document.getElementById('message-form').addEventListener('submit', function(event) {
+// Handle form submission
+document.getElementById('messageForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission
 
-    const formData = new FormData(event.target);
-    const message = {
-        user: formData.get('user'),
-        country: formData.get('country'),
-        emoji: formData.get('emoji'),
-        text: formData.get('text')
-    };
+    const messageInput = document.getElementById('message');
+    const messageText = messageInput.value.trim();
+    
+    if (messageText) {
+        const message = {
+            user: user.name,
+            country: user.country,
+            emoji: user.emoji,
+            text: messageText
+        };
+        
+        saveMessage(message);
+        loadMessages();
+        messageInput.value = '';
 
-    saveMessage(message);
-    loadMessages();
-
-    // Optionally, display a success message or reset the form
-    document.getElementById('form-message').textContent = 'Your message has been sent!';
-    event.target.reset();
+        // Optionally, you can add logic to handle form submission response
+    }
 });
 
 // Load messages when the DOM is fully loaded
