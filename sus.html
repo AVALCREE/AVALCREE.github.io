@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Full-Screen GIF</title>
+    <title>Full-Screen GIF with Sound</title>
     <style>
         body {
             margin: 0;
@@ -15,18 +15,28 @@
             height: 100vh;
             width: 100vw;
             background: black; /* Optional: background color to enhance GIF visibility */
+            position: relative;
         }
         .fullscreen-gif {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures the GIF covers the entire screen without distortion */
         }
     </style>
 </head>
 <body>
     <img src="https://media1.tenor.com/m/1iSARWJr-TEAAAAC/among-us-twerk.gif" alt="Full Screen GIF" class="fullscreen-gif">
+    <audio id="sound" src="https://www.myinstants.com/media/sounds/amogus.mp3" loop></audio>
+    <script>
+        window.addEventListener('load', () => {
+            const sound = document.getElementById('sound');
+            setTimeout(() => {
+                sound.play();
+            }, 1);
+        });
+    </script>
 </body>
 </html>
