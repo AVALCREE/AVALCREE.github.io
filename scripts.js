@@ -42,12 +42,13 @@ async function sendMessage() {
 
         // Send email using EmailJS
         try {
-            await emailjs.send('service_wvhhonc', 'template_ajbdu7b', {
+            const response = await emailjs.send('service_wvhhonc', 'template_ajbdu7b', {
                 user: message.user,
                 country: message.country,
                 emoji: message.emoji,
                 text: message.text
             });
+            console.log('EmailJS response:', response);
             alert('Your message has been sent to me!');
         } catch (error) {
             console.error('Error sending email:', error);
