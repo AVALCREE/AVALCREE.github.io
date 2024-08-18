@@ -62,6 +62,16 @@
             background-color: rgba(255, 255, 255, 0.4);
             border-color: #00ff7f;
         }
+        .hidden {
+            display: none;
+        }
+        .dancing-cat {
+            margin-top: 20px;
+        }
+        .dancing-cat img {
+            width: 100px;
+            height: 100px;
+        }
         /* Responsive design */
         @media (max-width: 768px) {
             button {
@@ -95,22 +105,42 @@
         <h1>Welcome to My Website</h1>
         <div class="button-container">
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/MEGA_logo.png" alt="Mega Icon">
+                <img src="https://img.icons8.com/color/48/mega.png" alt="Mega Icon">
                 Files Archive
             </button>
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Itch.io_logo.svg" alt="Itch.io Icon">
+                <img src="https://img.icons8.com/nolan/64/itch-io.png" alt="Itch.io Icon">
                 Download My Gorilla Tag Fan Game
             </button>
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Discord_Logo.svg" alt="Discord Icon">
+                <img src="https://img.icons8.com/color/48/discord-logo.png" alt="Discord Icon">
                 Join My Discord
             </button>
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Icon">
+                <img src="https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/64/external-chatgpt-chatbot-openai-research-openai-logo-shadow-tal-revivo.png" alt="ChatGPT Icon">
                 Shout out to ChatGPT
             </button>
+            <!-- Unity and Gorilla Tag buttons, hidden initially -->
+            <button id="unity-button" class="hidden" onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://img.icons8.com/nolan/64/unity.png" alt="Unity Icon">
+                Unity Game Engine
+            </button>
+            <button id="gorilla-tag-button" class="hidden" onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://img.icons8.com/nolan/64/gorilla.png" alt="Gorilla Tag Icon">
+                Gorilla Tag
+            </button>
+        </div>
+        <div class="dancing-cat">
+            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Dancing Cat">
         </div>
     </div>
+
+    <script>
+        // Function to show Unity and Gorilla Tag buttons after 10 minutes
+        setTimeout(function() {
+            document.getElementById('unity-button').classList.remove('hidden');
+            document.getElementById('gorilla-tag-button').classList.remove('hidden');
+        }, 600000); // 600000 milliseconds = 10 minutes
+    </script>
 </body>
 </html>
