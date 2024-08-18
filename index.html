@@ -11,13 +11,14 @@
             background: url('https://images.pexels.com/photos/3770757/pexels-photo-3770757.jpeg') no-repeat center center fixed;
             background-size: cover;
             color: white;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
+            position: relative;
         }
         .container {
             padding: 20px;
@@ -54,8 +55,8 @@
             max-width: 400px;
         }
         button img {
-            width: 50px;
-            height: 50px;
+            width: 40px; /* Smaller GIF size */
+            height: 40px;
             margin-right: 15px;
         }
         button:hover {
@@ -65,10 +66,8 @@
         .hidden {
             display: none;
         }
-        .invisible-button {
+        .invisible-button, .toggle-jumpscare-button {
             position: absolute;
-            top: 10px;
-            right: 10px;
             width: 50px;
             height: 50px;
             background-color: transparent;
@@ -76,38 +75,60 @@
             cursor: pointer;
             z-index: 1000;
         }
-        .dancing-cat {
-            margin-top: 20px;
+        .invisible-button {
+            top: 10px;
+            right: 10px;
         }
-        .dancing-cat img {
-            width: 100px;
-            height: 100px;
+        .toggle-jumpscare-button {
+            bottom: 10px;
+            right: 10px;
         }
-        /* Responsive design */
-        @media (max-width: 768px) {
-            button {
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-            button img {
-                width: 40px;
-                height: 40px;
-                margin-right: 10px;
-            }
+        .icon {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            animation: moveAround 10s linear infinite;
+            display: none;
         }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-            button {
-                padding: 8px 16px;
-                font-size: 0.9rem;
-            }
-            button img {
-                width: 35px;
-                height: 35px;
-                margin-right: 8px;
-            }
+        .icon.unity { top: 10%; left: 10%; }
+        .icon.gorilla-tag { top: 70%; left: 70%; }
+        @keyframes moveAround {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(100px, 100px); }
+            50% { transform: translate(0, 200px); }
+            75% { transform: translate(-100px, 100px); }
+            100% { transform: translate(0, 0); }
+        }
+        .jumpscare {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .jumpscare img {
+            width: 100%; /* Cover the entire screen */
+            height: auto;
+            max-height: 100vh;
+            object-fit: cover;
+        }
+        .jumpscare button {
+            background-color: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -115,45 +136,96 @@
     <div class="container">
         <h1>Welcome to My Website</h1>
         <div class="button-container">
-            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/color/48/mega.png" alt="Mega Icon">
+            <button onclick="window.location.href='https://mega.nz/folder/7qIlwBqK#S0ez5l9xe_TAar1zpNxlPw';">
+                <img src="https://mega.io/wp-content/themes/megapages/megalib/images/megaicon.svg" alt="Mega">
                 Files Archive
             </button>
-            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/nolan/64/itch-io.png" alt="Itch.io Icon">
+            <button onclick="window.location.href='https://frits8882992.itch.io/ar';">
+                <img src="https://img.icons8.com/?size=256&id=zfuVDK4SdKFq&format=png" alt="Itch.io">
                 Download My Gorilla Tag Fan Game
             </button>
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/color/48/discord-logo.png" alt="Discord Icon">
+                <img src="https://img.icons8.com/ios-filled/50/000000/youtube.png" alt="YouTube">
+                Go to My YouTube
+            </button>
+            <button onclick="window.location.href='https://dsc.gg/guy2828';">
+                <img src="https://img.icons8.com/ios-filled/50/000000/discord.png" alt="Discord">
                 Join My Discord
             </button>
-            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/external-tal-revivo-shadow-tal-revivo/64/external-chatgpt-chatbot-openai-research-openai-logo-shadow-tal-revivo.png" alt="ChatGPT Icon">
-                Shout out to ChatGPT
-            </button>
-            <!-- Unity and Gorilla Tag buttons, hidden initially -->
-            <button id="unity-button" class="hidden" onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/nolan/64/unity.png" alt="Unity Icon">
-                Unity Game Engine
-            </button>
-            <button id="gorilla-tag-button" class="hidden" onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/nolan/64/gorilla.png" alt="Gorilla Tag Icon">
-                Gorilla Tag
-            </button>
+        </div>
+        <div class="shoutout-text">
+            <img src="https://img.icons8.com/ios-filled/50/000000/chatgpt.png" alt="ChatGPT">
+            Shout out to ChatGPT
         </div>
         <div class="dancing-cat">
             <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Dancing Cat">
         </div>
     </div>
 
-    <!-- Invisible button in the top right corner -->
+    <!-- Invisible buttons -->
     <button class="invisible-button" onclick="showIcons()"></button>
+    <button class="toggle-jumpscare-button" onclick="toggleJumpscare()"></button>
+
+    <!-- Unity and Gorilla Tag icons -->
+    <img src="https://img.icons8.com/ios-filled/50/000000/unity.png" alt="Unity" class="icon unity">
+    <img src="https://cdn2.steamgriddb.com/logo_thumb/a66f8f0921301a9b92d41aec1644b0a5.png" alt="Gorilla Tag" class="icon gorilla-tag">
+
+    <!-- Jumpscare overlay -->
+    <div class="jumpscare" id="jumpscare">
+        <img src="https://gifdb.com/images/high/fnaf-cat-jumpscare-meme-vezf6psx230cy9nv.gif" alt="Cat Jumpscare">
+        <div>Did I scare you?</div>
+        <button onclick="handleJumpscareResponse('yes')">Yes</button>
+        <button onclick="handleJumpscareResponse('no')">No</button>
+    </div>
 
     <script>
-        // Function to show Unity and Gorilla Tag buttons
+        let jumpscareShown = false;
+
+        // Function to show Unity and Gorilla Tag icons
         function showIcons() {
-            document.getElementById('unity-button').classList.remove('hidden');
-            document.getElementById('gorilla-tag-button').classList.remove('hidden');
+            document.querySelectorAll('.icon').forEach(icon => {
+                icon.style.display = 'block';
+            });
+        }
+
+        // Show the icons after 10 minutes
+        setTimeout(showIcons, 600000);
+
+        // Show jumpscare overlay after 30 seconds
+        setTimeout(() => {
+            if (!jumpscareShown) {
+                document.getElementById('jumpscare').style.display = 'flex';
+                jumpscareShown = true;
+            }
+        }, 30000);
+
+        function toggleJumpscare() {
+            const jumpscareDiv = document.getElementById('jumpscare');
+            if (jumpscareDiv.style.display === 'flex') {
+                jumpscareDiv.style.display = 'none';
+            } else {
+                jumpscareDiv.style.display = 'flex';
+            }
+        }
+
+        function handleJumpscareResponse(response) {
+            const jumpscareDiv = document.getElementById('jumpscare');
+            if (response === 'yes') {
+                jumpscareDiv.innerHTML = `
+                    <img src="https://gifdb.com/images/high/fnaf-cat-jumpscare-meme-vezf6psx230cy9nv.gif" alt="Cat Jumpscare">
+                    <div>Boo :)</div>
+                    <button onclick="closeJumpscare()">Close</button>
+                `;
+            } else {
+                jumpscareDiv.innerHTML = `
+                    <div>Close</div>
+                    <button onclick="closeJumpscare()">Close</button>
+                `;
+            }
+        }
+
+        function closeJumpscare() {
+            document.getElementById('jumpscare').style.display = 'none';
         }
     </script>
 </body>
