@@ -65,6 +65,17 @@
         .hidden {
             display: none;
         }
+        .invisible-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+        }
         .dancing-cat {
             margin-top: 20px;
         }
@@ -135,12 +146,15 @@
         </div>
     </div>
 
+    <!-- Invisible button in the top right corner -->
+    <button class="invisible-button" onclick="showIcons()"></button>
+
     <script>
-        // Function to show Unity and Gorilla Tag buttons after 10 minutes
-        setTimeout(function() {
+        // Function to show Unity and Gorilla Tag buttons
+        function showIcons() {
             document.getElementById('unity-button').classList.remove('hidden');
             document.getElementById('gorilla-tag-button').classList.remove('hidden');
-        }, 600000); // 600000 milliseconds = 10 minutes
+        }
     </script>
 </body>
 </html>
