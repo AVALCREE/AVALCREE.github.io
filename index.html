@@ -91,8 +91,8 @@
             display: none;
         }
         .icon.unity { top: 10%; left: 10%; }
-        .icon.gorilla-tag { top: 70%; left: 70%; }
-        .icon.rolling-image { top: 40%; left: 40%; width: 150px; height: 150px; }
+        .icon.gorilla-tag { top: 70%; left: 70%; width: 200px; height: 100px; } /* Made wider */
+        .icon.rolling-image { top: 40%; left: 40%; width: 150px; height: 200px; } /* Made taller */
         @keyframes moveAround {
             0% { transform: translate(0, 0); }
             25% { transform: translate(100px, 100px); }
@@ -207,39 +207,49 @@
     <!-- Audio elements for sound effects -->
     <audio id="jumpscare-sound" src="https://www.myinstants.com/media/sounds/amogus.mp3" preload="auto"></audio>
     <!-- Additional sound effects -->
-    <audio id="extra-sound" src="https://www.myinstants.com/media/sounds/vine-boom.mp3" preload="auto"></audio>
+    <audio id="additional-sound" src="https://www.myinstants.com/media/sounds/trollge.mp3" preload="auto"></audio>
 
     <script>
+        let jumpscareTimeout;
+        let jumpscareShown = false;
+
+        // Automatically show jumpscare after 30 seconds
+        setTimeout(() => {
+            if (!jumpscareShown) {
+                toggleJumpscare();
+            }
+        }, 30000);
+
         function showIcons() {
-            const icons = document.querySelectorAll('.icon');
-            icons.forEach(icon => {
-                icon.style.display = 'block';
-            });
+            document.querySelector('.icon.unity').style.display = 'block';
+            document.querySelector('.icon.gorilla-tag').style.display = 'block';
+            document.querySelector('.icon.rolling-image').style.display = 'block';
         }
 
         function toggleJumpscare() {
-            const jumpscare = document.getElementById('jumpscare');
-            const sound = document.getElementById('jumpscare-sound');
-            jumpscare.style.display = 'flex';
-            sound.play();
+            const jumpscareElement = document.getElementById('jumpscare');
+            const jumpscareSound = document.getElementById('jumpscare-sound');
+            jumpscareElement.style.display = jumpscareElement.style.display === 'flex' ? 'none' : 'flex';
+            if (jumpscareElement.style.display === 'flex') {
+                jumpscareSound.play();
+                jumpscareShown = true;
+            } else {
+                jumpscareSound.pause();
+                jumpscareSound.currentTime = 0;
+                jumpscareShown = false;
+            }
         }
 
         function handleJumpscareResponse(response) {
-            alert(`You clicked "${response}"!`);
-            document.getElementById('jumpscare').style.display = 'none';
+            const additionalSound = document.getElementById('additional-sound');
+            if (response === 'yes') {
+                alert('Glad you enjoyed it!');
+            } else {
+                alert('Oh, sorry!');
+            }
+            toggleJumpscare();
+            additionalSound.play();
         }
-
-        function playExtraSound() {
-            const sound = document.getElementById('extra-sound');
-            sound.play();
-        }
-
-        // Show the rolling image after 10 minutes
-        setTimeout(() => {
-            const rollingImage = document.querySelector('.icon.rolling-image');
-            rollingImage.style.display = 'block';
-        }, 600000); // 10 minutes
-
     </script>
 </body>
 </html>
