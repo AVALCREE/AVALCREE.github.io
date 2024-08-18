@@ -11,7 +11,7 @@
             background: url('https://images.pexels.com/photos/3770757/pexels-photo-3770757.jpeg') no-repeat center center fixed;
             background-size: cover;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
             display: flex;
             justify-content: center;
@@ -24,24 +24,27 @@
             max-width: 600px;
             width: 100%;
             box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            border-radius: 10px;
         }
         h1 {
             margin-bottom: 20px;
-            font-size: 2rem;
+            font-size: 2.5rem;
+            font-weight: bold;
         }
         button {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(255, 255, 255, 0.2);
             color: white;
-            border: none;
+            border: 2px solid white;
             padding: 15px 30px;
             font-size: 16px;
             cursor: pointer;
             margin: 10px;
-            border-radius: 5px;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, border-color 0.3s;
         }
         button img {
             width: 24px;
@@ -49,12 +52,25 @@
             margin-right: 10px;
         }
         button:hover {
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(255, 255, 255, 0.4);
+            border-color: #00ff7f;
         }
         .button-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+        .shoutout {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .shoutout img {
+            width: 32px;
+            height: 32px;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -63,21 +79,25 @@
         <h1>Welcome to My Website</h1>
         <div class="button-container">
             <button onclick="window.location.href='https://mega.nz/folder/7qIlwBqK#S0ez5l9xe_TAar1zpNxlPw';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Mega_Logo.svg/1200px-Mega_Logo.svg.png" alt="Mega Icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/MEGA_logo.png" alt="Mega Icon">
                 Files Archive
             </button>
             <button onclick="window.location.href='https://frits8882992.itch.io/ar';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Itch.io_Logo.svg/1200px-Itch.io_Logo.svg.png" alt="Itch.io Icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Itch.io_logo.svg" alt="Itch.io Icon">
                 Download My Gorilla Tag Fan Game
             </button>
             <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/YouTube_icon_%282013-2017%29.png/600px-YouTube_icon_%282013-2017%29.png" alt="YouTube Icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Icon">
                 Go to My YouTube
             </button>
             <button onclick="window.location.href='https://dsc.gg/guy2828';">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Discord_Logo_2015.svg/1200px-Discord_Logo_2015.svg.png" alt="Discord Icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Discord_Logo.svg" alt="Discord Icon">
                 Join My Discord
             </button>
+        </div>
+        <div class="shoutout">
+            Shout out to ChatGPT
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Icon">
         </div>
     </div>
 </body>
