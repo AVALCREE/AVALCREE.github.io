@@ -16,7 +16,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Full viewport height */
+            height: 100vh;
             overflow: hidden;
         }
         .container {
@@ -24,7 +24,7 @@
             max-width: 600px;
             width: 100%;
             box-sizing: border-box;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 10px;
         }
         h1 {
@@ -32,12 +32,17 @@
             font-size: 2.5rem;
             font-weight: bold;
         }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         button {
             background-color: rgba(255, 255, 255, 0.2);
             color: white;
             border: 2px solid white;
             padding: 15px 30px;
-            font-size: 16px;
+            font-size: 1.2rem;
             cursor: pointer;
             margin: 10px;
             border-radius: 50px;
@@ -45,8 +50,67 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s, border-color 0.3s;
+            width: 100%;
+            max-width: 400px;
         }
         button img {
-            width: 24px;
-            height: 24px;
-            margin
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+        button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            border-color: #00ff7f;
+        }
+        /* Responsive design */
+        @media (max-width: 768px) {
+            button {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            button img {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            button img {
+                width: 35px;
+                height: 35px;
+                margin-right: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My Website</h1>
+        <div class="button-container">
+            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/MEGA_logo.png" alt="Mega Icon">
+                Files Archive
+            </button>
+            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Itch.io_logo.svg" alt="Itch.io Icon">
+                Download My Gorilla Tag Fan Game
+            </button>
+            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Discord_Logo.svg" alt="Discord Icon">
+                Join My Discord
+            </button>
+            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Icon">
+                Shout out to ChatGPT
+            </button>
+        </div>
+    </div>
+</body>
+</html>
