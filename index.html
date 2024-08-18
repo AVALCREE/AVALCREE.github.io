@@ -1,11 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Hello, world!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My Website</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('https://images.pexels.com/photos/3770757/pexels-photo-3770757.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden;
+        }
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        button {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        button img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
-
+    <div class="container">
+        <h1>Welcome to My Website</h1>
+        <div class="button-container">
+            <button onclick="window.location.href='https://mega.nz/folder/7qIlwBqK#S0ez5l9xe_TAar1zpNxlPw';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Mega_Logo.svg/1200px-Mega_Logo.svg.png" alt="Mega Icon">
+                Files Archive
+            </button>
+            <button onclick="window.location.href='https://frits8882992.itch.io/ar';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Itch.io_Logo.svg/1200px-Itch.io_Logo.svg.png" alt="Itch.io Icon">
+                Download My Gorilla Tag Fan Game
+            </button>
+            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/YouTube_icon_%282013-2017%29.png/600px-YouTube_icon_%282013-2017%29.png" alt="YouTube Icon">
+                Go to My YouTube
+            </button>
+            <button onclick="window.location.href='https://dsc.gg/guy2828';">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Discord_Logo_2015.svg/1200px-Discord_Logo_2015.svg.png" alt="Discord Icon">
+                Join My Discord
+            </button>
+        </div>
+    </div>
 </body>
 </html>
