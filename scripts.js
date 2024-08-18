@@ -25,37 +25,25 @@ function saveMessage(message) {
     localStorage.setItem('messages', JSON.stringify(messages));
 }
 
-// Function to send message using EmailJS
-async function sendMessage() {
-    const messageInput = document.getElementById('message');
-    const messageText = messageInput.value.trim();
-    if (messageText) {
-        const message = {
-            user: user.name,
-            country: user.country,
-            emoji: user.emoji,
-            text: messageText
-        };
-        saveMessage(message);
-        loadMessages();
-        messageInput.value = '';
+// Function to handle form submission
+document.getElementById('message-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-        // Send email using EmailJS
-        try {
-            const response = await emailjs.send('service_wvhhonc', 'template_ajbdu7b', {
-                user: message.user,
-                country: message.country,
-                emoji: message.emoji,
-                text: message.text
-            });
-            console.log('EmailJS response:', response);
-            alert('Your message has been sent to me!');
-        } catch (error) {
-            console.error('Error sending email:', error);
-            alert('Failed to send your message.');
-        }
-    }
-}
+    const formData = new FormData(event.target);
+    const message = {
+        user: formData.get('user'),
+        country: formData.get('country'),
+        emoji: formData.get('emoji'),
+        text: formData.get('text')
+    };
+
+    saveMessage(message);
+    loadMessages();
+
+    // Optionally, display a success message or reset the form
+    document.getElementById('form-message').textContent = 'Your message has been sent!';
+    event.target.reset();
+});
 
 // Load messages when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', loadMessages);
