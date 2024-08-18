@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country and Language Detection</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: gray;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .message {
+            font-size: 2rem;
+            word-wrap: break-word;
+        }
+        .flag-img {
+            width: 40px;
+            height: auto;
+            vertical-align: middle;
+            margin: 0 10px;
+        }
+        .fact {
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .message {
+                font-size: 1.5rem;
+            }
+            .flag-img {
+                width: 30px;
+            }
+            .fact {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .message {
+                font-size: 1.2rem;
+            }
+            .flag-img {
+                width: 25px;
+            }
+            .fact {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="message" id="message">Loading...</div>
+    <div class="fact" id="fact"></div>
+
+    <script>
+        // Obfuscated URLs and sensitive data
+        const urls = {
+            flags: 'https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/images/',
+            languages: 'https://raw.githubusercontent.com/vire/country.json/master/src/country-languages.json',
+            facts: 'https://restcountries.com/v3.1/all',
+            ipAPI: 'https://ipapi.co/json/'
+        };
+
+        const translations = {
+            'en': 'Hello',
+            'es': 'Hola',
+            'pt': 'Olá',
+            'fr': 'Bonjour',
+            'de': 'Hallo',
+            'it': 'Ciao',
+            'ro': 'Bună',
+            'ru': 'Здравствуйте',
+            'zh': '你好',
+            'yue': '你好',
+            'ja': 'こんにちは',
+            'ko': '안녕하세요',
+            'hi': 'नमस्ते',
+            'ur': 'ہیلو',
+            'ar': 'مرحبا',
+            'fa': 'سلام',
+            'tr': 'Merhaba',
+            'bn': 'হ্যালো',
+            'nl': 'Hallo',
+            'be': 'Вітаю',
+            'sq': 'Përshëndetje',
+            'he': 'שלום',
+            'no': 'Hallo',
+            'hu': 'Helló'
+        };
+
+        async function getCountryByIP() {
+            try {
+                const [languageResponse, ipResponse] = await Promise.all([
+                    fetch(urls.languages),
+                    fetch(urls.ipAPI)
+                ]);
+
+                const languageData = await languageResponse.json();
+                const data = await ipResponse.json();
+
+                if (ipResponse.ok) {
+                    const countryCode = data.country_code.toLowerCase();
+                    const countryName = data.country_name;
+                    const languageCode = getLanguageCode(countryCode, languageData);
+                    const translatedHello = translations[languageCode] || translations['en'];
+
+                    const flagImg = await getFlagImageAsPNG(countryCode);
+                    const countryFacts = await getCountryFacts(countryCode);
+
+                    document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
+                    document.getElementById('fact').innerHTML = countryFacts || '<p>No facts available.</p>';
+                } else {
+                    document.getElementById('message').textContent = 'Unable to determine location.';
+                }
+            } catch (error) {
+                document.getElementById('message').textContent = 'Error retrieving location.';
+            }
+        }
+
+        function getLanguageCode(countryCode, languageData) {
+            const countryLanguageMap = {
+                'ae': 'ar',
+                'sg': 'zh',
+                'hk': 'yue',
+                'ar': 'ar',
+                'br': 'pt-BR',
+                'ua': 'uk',
+                'kz': 'kk',
+                'ci': 'fr'
+            };
+            return countryLanguageMap[countryCode] || languageData[countryCode.toUpperCase()] || 'en';
+        }
+
+        async function getFlagImageAsPNG(countryCode) {
+            const svgUrl = `${urls.flags}${countryCode.toUpperCase()}.svg`;
+            try {
+                const response = await fetch(svgUrl);
+                const svgText = await response.text();
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                canvas.width = 40;
+                canvas.height = 30;
+
+                return new Promise((resolve, reject) => {
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const pngUrl = canvas.toDataURL('image/png');
+                        resolve(pngUrl);
+                    };
+                    img.onerror = reject;
+                    img.src = 'data:image/svg+xml;base64,' + btoa(svgText);
+                });
+            } catch (error) {
+                console.error('Error fetching or converting flag image:', error);
+                return '';
+            }
+        }
+
+        async function getCountryFacts(countryCode) {
+            try {
+                const response = await fetch(urls.facts);
+                const allCountries = await response.json();
+                const country = allCountries.find(c => c.cca2.toLowerCase() === countryCode.toUpperCase());
+                if (country) {
+                    if (countryCode === 'ae') {
+                        return `
+                            <strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'}<br>
+                            <strong>Population:</strong> ${country.population.toLocaleString()}<br>
+                            <strong>Region:</strong> ${country.region}<br>
+                            <strong>Subregion:</strong> ${country.subregion}<br>
+                            <strong>Area:</strong> ${country.area.toLocaleString()} km²<br>
+                            <strong>Notable Fact:</strong> Home to the Burj Khalifa, the tallest building in the world at 828 meters tall.
+                        `;
+                    } else {
+                        return `
+                            <strong>Capital:</strong> ${country.capital ? country.capital[0] : 'N/A'}<br>
+                            <strong>Population:</strong> ${country.population.toLocaleString()}<br>
+                            <strong>Region:</strong> ${country.region}<br>
+                            <strong>Subregion:</strong> ${country.subregion}<br>
+                            <strong>Area:</strong> ${country.area.toLocaleString()} km²
+                        `;
+                    }
+                } else {
+                    return 'No facts available.';
+                }
+            } catch (error) {
+                console.error('Error fetching country facts:', error);
+                return 'Error retrieving country facts.';
+            }
+        }
+
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
+        getCountryByIP();
+    </script>
+</body>
+</html>
