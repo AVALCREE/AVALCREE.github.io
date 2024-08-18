@@ -1,47 +1,176 @@
-<!DOCTYPE html><!--[if IE]>  <html class="stl_ie"> <![endif]-->
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title>
-		</title>
-		
-	<STYLE>
-.stl_ sup {
-	vertical-align: baseline;
-	position: relative;
-	top: -0.4em;
-}
-.stl_ sub {
-	vertical-align: baseline;
-	position: relative;
-	top: 0.4em;
-}
-.stl_ a:link {text-decoration:none;}
-.stl_ a:visited {text-decoration:none;}
-@media screen and (min-device-pixel-ratio:0), (-webkit-min-device-pixel-ratio:0), (min--moz-device-pixel-ratio: 0) {.stl_view{ font-size:10em; transform:scale(0.1); -moz-transform:scale(0.1); -webkit-transform:scale(0.1); -moz-transform-origin:top left; -webkit-transform-origin:top left; } }
-.stl_layer { }.stl_ie { font-size: 1pt; }
-.stl_ie body { font-size: 12em; }
-@media print{.stl_view {font-size:1em; transform:scale(1);}}
-.stl_grlink { position:relative;width:100%;height:100%;z-index:1000000; }
-.stl_01 {
-	position: absolute;
-	white-space: nowrap;
-}
-.stl_02 {
-	font-size: 1em;
-	line-height: 0.0em;
-	width: 70.16666em;
-	height: 49.58333em;
-	border-style: none;
-	display: block;
-	margin: 0em;
-}
-
-@supports(-ms-ime-align:auto) { .stl_02 {overflow: hidden;}}
-
-</STYLE>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Messaging App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 500px;
+            border: 1px solid #ccc;
+            background: white;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+        #message-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            background-color: #e2e2e2;
+        }
+        .message.self {
+            background-color: #9fe2bf;
+            align-self: flex-end;
+        }
+        #username-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #username-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        #username-input {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #username-submit {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
 </head>
-	<body>
-		<div class="stl_ stl_02" />
-	</body>
+<body>
+
+    <h1>Group Messaging App</h1>
+
+    <div id="chat-container"></div>
+
+    <input type="text" id="message-input" placeholder="Type your message here..." />
+
+    <!-- Username Modal -->
+    <div id="username-modal">
+        <form id="username-form">
+            <h2>Enter your username</h2>
+            <input type="text" id="username-input" placeholder="Username" required />
+            <button type="submit" id="username-submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA2MWCSREKodnFsrQCh6BBtnO8OGoHegN4",
+            authDomain: "message-group-3fc36.firebaseapp.com",
+            databaseURL: "https://message-group-3fc36-default-rtdb.firebaseio.com/",
+            projectId: "message-group-3fc36",
+            storageBucket: ""message-group-3fc36.appspot.com",
+            messagingSenderId: "34420880206",
+            appId: "1:34420880206:web:b846001aa605d3a848e41f"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // HTML Elements
+        const messageInput = document.getElementById('message-input');
+        const chatContainer = document.getElementById('chat-container');
+        const usernameModal = document.getElementById('username-modal');
+        const usernameForm = document.getElementById('username-form');
+        const usernameInput = document.getElementById('username-input');
+
+        let username = '';
+
+        // Prompt user for a username
+        usernameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            username = usernameInput.value.trim();
+            if (username) {
+                usernameModal.style.display = 'none';
+            }
+        });
+
+        // Listen for 'Enter' key to send a message
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && username) {
+                const message = messageInput.value.trim();
+                if (message) {
+                    sendMessage(message);
+                    messageInput.value = ''; // Clear input field
+                }
+            }
+        });
+
+        // Function to send a message
+        function sendMessage(message) {
+            const messagesRef = db.ref('messages');
+            const newMessageRef = messagesRef.push();
+            newMessageRef.set({
+                username: username,
+                text: message,
+                timestamp: Date.now()
+            });
+        }
+
+        // Function to display a message
+        function displayMessage(data) {
+            const messageData = data.val();
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            if (messageData.username === username) {
+                messageElement.classList.add('self');
+            }
+            messageElement.textContent = `${messageData.username}: ${messageData.text}`;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+        }
+
+        // Listen for new messages
+        const messagesRef = db.ref('messages');
+        messagesRef.on('child_added', (data) => {
+            displayMessage(data);
+        });
+    </script>
+
+</body>
 </html>
