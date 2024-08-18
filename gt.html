@@ -63,7 +63,9 @@
             ipAPI: 'https://ipapi.co/json/',
             wikipediaAPI: 'https://en.wikipedia.org/w/api.php',
             googleSearchURL: 'https://www.google.com/search?q=',
+            youtubeSearchURL: 'https://www.youtube.com/results?search_query=',
             anthemSearchURL: 'https://nationalanthems.info/',
+            youtubeDownloadAPI: 'https://api.example.com/download?url=' // Placeholder for YouTube to MP3 service
         };
 
         const translations = {
@@ -119,7 +121,7 @@
                     document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
                     document.getElementById('fact').innerHTML = countryFacts || '<p>No facts available.</p>';
 
-                    await getNationalAnthem(countryName, languageCode);
+                    await getNationalAnthem(countryName);
                 } else {
                     document.getElementById('message').textContent = 'Unable to determine location.';
                 }
@@ -238,25 +240,15 @@
             }
         }
 
-        async function getNationalAnthem(countryName, languageCode) {
+        async function getNationalAnthem(countryName) {
             try {
-                if (countryName.toLowerCase().includes('united arab emirates') || 
-                    countryName.toLowerCase().includes('uae') || 
-                    countryName.toLowerCase().includes('emirates') || 
-                    countryName.toLowerCase().includes('emirate')) {
-                    
-                    document.getElementById('anthem').innerHTML = 'The UAE National Anthem';
-                    document.getElementById('anthemPlayer').src = 'https://nationalanthems.info/ae.mp3';
+                const anthemUrl = await searchNationalAnthem(countryName) || await searchYouTubeForAnthem(countryName);
+                if (anthemUrl) {
+                    document.getElementById('anthem').innerHTML = `The National Anthem for ${countryName}`;
+                    document.getElementById('anthemPlayer').src = anthemUrl;
                     document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
                 } else {
-                    const anthemUrl = await searchNationalAnthem(countryName);
-                    if (anthemUrl) {
-                        document.getElementById('anthem').innerHTML = `The National Anthem for ${countryName}`;
-                        document.getElementById('anthemPlayer').src = anthemUrl;
-                        document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
-                    } else {
-                        document.getElementById('anthem').textContent = 'No anthem available.';
-                    }
+                    document.getElementById('anthem').textContent = 'No anthem available.';
                 }
             } catch (error) {
                 console.error('Error fetching national anthem:', error);
@@ -272,6 +264,23 @@
                 return anthemMatch ? anthemMatch[1] : '';
             } catch (error) {
                 console.error('Error fetching national anthem from nationalanthems.info:', error);
+                return '';
+            }
+        }
+
+        async function searchYouTubeForAnthem(countryName) {
+            try {
+                const response = await fetch(`${urls.youtubeSearchURL}${encodeURIComponent(countryName + ' national anthem')}`);
+                const text = await response.text();
+                const videoIdMatch = text.match(/"videoId":"([^"]+)"/);
+                if (videoIdMatch) {
+                    const videoId = videoIdMatch[1];
+                    const downloadUrl = `${urls.youtubeDownloadAPI}${encodeURIComponent(videoId)}`;
+                    return downloadUrl;
+                }
+                return '';
+            } catch (error) {
+                console.error('Error fetching anthem from YouTube:', error);
                 return '';
             }
         }
