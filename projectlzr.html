@@ -10,22 +10,12 @@
     <div id="chat-container">
         <div id="messages"></div>
         <div id="message-input">
-            <input type="text" id="message" placeholder="Type a message...">
-            <button onclick="sendMessage()">Send</button>
+            <form id="messageForm" action="https://formspree.io/f/myzgdywk" method="POST">
+                <input type="text" id="message" name="message" placeholder="Type a message..." required>
+                <button type="submit">Send</button>
+            </form>
         </div>
     </div>
-
-    <!-- Form for sending messages -->
-    <form action="https://formspree.io/f/myzgdywk" method="POST" id="message-form">
-        <input type="text" name="user" placeholder="Your Name" required>
-        <input type="text" name="country" placeholder="Your Country" required>
-        <input type="text" name="emoji" placeholder="Your Emoji" required>
-        <textarea name="text" placeholder="Type your message..." required></textarea>
-        <button type="submit">Send</button>
-        <div id="form-message"></div>
-    </form>
-
-    <!-- Include your custom JavaScript file -->
     <script src="scripts.js"></script>
 </body>
 </html>
