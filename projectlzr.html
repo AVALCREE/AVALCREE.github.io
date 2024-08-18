@@ -42,7 +42,7 @@
             color: #eee;
             box-sizing: border-box;
         }
-        #emoji-button, #gif-button, #file-button {
+        #emoji-button, #gif-button, #file-button, #send-button {
             padding: 10px;
             border: 1px solid #555;
             border-left: none;
@@ -171,6 +171,7 @@
         <div id="gif-button">GIF</div>
         <div id="file-button">Upload</div>
         <input type="file" id="file-input" />
+        <button id="send-button">Send</button>
     </div>
 
     <!-- GIF Search Modal -->
@@ -214,6 +215,7 @@
         const clickSound = document.getElementById('click-sound');
         const sendSound = document.getElementById('send-sound');
         const typingSound = document.getElementById('typing-sound');
+        const sendButton = document.getElementById('send-button');
 
         let username = '';
 
@@ -313,19 +315,10 @@
             });
         }
 
-        // Listen for 'Enter' key to send a message
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && username) {
-                const message = messageInput.value.trim();
-                if (message) {
-                    sendMessage(message);
-                    messageInput.value = ''; // Clear input field
-                }
-            }
-        });
-
         // Function to send a message
         function sendMessage(message) {
+            if (message.trim() === '') return; // Avoid sending empty messages
+
             const messagesRef = db.ref('messages');
             const newMessageRef = messagesRef.push();
             newMessageRef.set({
@@ -336,6 +329,21 @@
             });
             playSound(sendSound);
         }
+
+        // Listen for 'Enter' key to send a message
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent newline in input field
+                sendMessage(messageInput.value);
+                messageInput.value = ''; // Clear input field
+            }
+        });
+
+        // Send button click event
+        sendButton.addEventListener('click', () => {
+            sendMessage(messageInput.value);
+            messageInput.value = ''; // Clear input field
+        });
 
         // Function to display a message
         function displayMessage(data) {
