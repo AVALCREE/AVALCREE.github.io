@@ -5,17 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Messaging System</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include Formspree Form -->
+    <style>
+        /* Optional: Hide form if you want to make it invisible */
+        #message-form {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div id="chat-container">
         <div id="messages"></div>
         <div id="message-input">
-            <form id="messageForm" action="https://formspree.io/f/myzgdywk" method="POST">
-                <input type="text" id="message" name="message" placeholder="Type a message..." required>
-                <button type="submit">Send</button>
-            </form>
+            <input type="text" id="message" placeholder="Type a message...">
+            <button id="sendButton">Send</button>
         </div>
     </div>
-    <script src="scripts.js"></script>
+    <!-- Formspree Form -->
+    <form id="message-form" action="https://formspree.io/f/myzgdywk" method="POST">
+        <input type="hidden" name="_subject" value="New message from your website">
+        <input type="hidden" name="_next" value="https://yourdomain.com/thankyou">
+        <input type="hidden" name="_captcha" value="false">
+    </form>
+
+    <script>
+        // Example user data - replace with dynamic user data if needed
+        const user = {
+            name: 'User1',
+            country: 'USA',
+            emoji: '🇺🇸'
+        };
+
+        // Function to load messages from localStorage and display them
+        function loadMessages() {
+            const messagesContainer = document.getElementById('messages');
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            messagesContainer.innerHTML = messages.map(message => `
+                <div class="message">
+                    <span class="username">${message.user} (${message.country} ${message.emoji})</span>: 
+                    <span class="text">${message.text}</span>
+                </div>
+            `).join('');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Function to save messages to localStorage
+        function saveMessage(message) {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            messages.push(message);
+            localStorage.setItem('messages', JSON.stringify(messages));
+        }
+
+        // Function to send message using Formspree
+        async function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const messageText = messageInput.value.trim();
+            if (messageText) {
+                const message = {
+                    user: user.name,
+                    country: user.country,
+                    emoji: user.emoji,
+                    text: messageText
+                };
+                saveMessage(message);
+                loadMessages();
+                messageInput.value = '';
+
+                // Send email using Formspree
+                const form = document.getElementById('message-form');
+                const formData = new FormData(form);
+                formData.append('message', JSON.stringify(message));
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response.ok) {
+                        alert('Your message has been sent to me!');
+                    } else {
+                        throw new Error('Failed to send your message.');
+                    }
+                } catch (error) {
+                    console.error('Error sending email:', error);
+                    alert('Failed to send your message.');
+                }
+            }
+        }
+
+        // Event listener for send button
+        document.getElementById('sendButton').addEventListener('click', sendMessage);
+
+        // Load messages when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadMessages);
+    </script>
 </body>
 </html>
