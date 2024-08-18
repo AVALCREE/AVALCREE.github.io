@@ -9,20 +9,20 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             width: 100vw;
             background: black; /* Optional: background color to enhance GIF visibility */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
         .fullscreen-gif {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             object-fit: cover; /* Ensures the GIF covers the entire screen without distortion */
         }
     </style>
@@ -33,9 +33,19 @@
     <script>
         window.addEventListener('load', () => {
             const sound = document.getElementById('sound');
-            setTimeout(() => {
-                sound.play();
-            }, 1);
+            let volume = 0.1; // Start volume level
+            let increaseRate = 0.1; // Amount to increase volume each repeat
+            let maxVolume = 1; // Maximum volume level
+
+            sound.volume = volume; // Set initial volume
+            sound.play();
+
+            sound.addEventListener('ended', () => {
+                // Increase volume on repeat
+                volume = Math.min(volume + increaseRate, maxVolume); // Ensure volume does not exceed maximum
+                sound.volume = volume; // Apply new volume
+                sound.play(); // Play the sound again
+            });
         });
     </script>
 </body>
