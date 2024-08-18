@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Messaging System</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Include EmailJS SDK from updated CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
 </head>
 <body>
     <div id="chat-container">
@@ -16,11 +14,18 @@
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
+
+    <!-- Form for sending messages -->
+    <form action="https://formspree.io/f/myzgdywk" method="POST" id="message-form">
+        <input type="text" name="user" placeholder="Your Name" required>
+        <input type="text" name="country" placeholder="Your Country" required>
+        <input type="text" name="emoji" placeholder="Your Emoji" required>
+        <textarea name="text" placeholder="Type your message..." required></textarea>
+        <button type="submit">Send</button>
+        <div id="form-message"></div>
+    </form>
+
     <!-- Include your custom JavaScript file -->
     <script src="scripts.js"></script>
-    <script>
-        // Initialize EmailJS with your User ID
-        emailjs.init('I3Y03QAeS8t_gru3w'); // Replace with your actual EmailJS User ID
-    </script>
 </body>
 </html>
