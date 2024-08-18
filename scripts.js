@@ -1,11 +1,10 @@
-// Example user data (in a real app, you'd fetch this from a server)
+// Example user data
 const user = {
     name: 'User1',
     country: 'USA',
     emoji: '🇺🇸'
 };
 
-// Load messages from local storage
 function loadMessages() {
     const messagesContainer = document.getElementById('messages');
     const messages = JSON.parse(localStorage.getItem('messages')) || [];
@@ -18,15 +17,13 @@ function loadMessages() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Save a message to local storage
 function saveMessage(message) {
     const messages = JSON.parse(localStorage.getItem('messages')) || [];
     messages.push(message);
     localStorage.setItem('messages', JSON.stringify(messages));
 }
 
-// Handle sending a message
-function sendMessage() {
+async function sendMessage() {
     const messageInput = document.getElementById('message');
     const messageText = messageInput.value.trim();
     if (messageText) {
@@ -39,8 +36,21 @@ function sendMessage() {
         saveMessage(message);
         loadMessages();
         messageInput.value = '';
+
+        // Send email using EmailJS
+        try {
+            await emailjs.send('service_wvhhonc', 'template_ajbdu7b', {
+                user: message.user,
+                country: message.country,
+                emoji: message.emoji,
+                text: message.text
+            });
+            alert('Your message has been sent to me!');
+        } catch (error) {
+            console.error('Error sending email:', error);
+            alert('Failed to send your message.');
+        }
     }
 }
 
-// Initialize chat
 document.addEventListener('DOMContentLoaded', loadMessages);
