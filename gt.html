@@ -29,7 +29,7 @@
         }
         .fact {
             margin-top: 20px;
-            font-size: 2rem; /* Same size as .message */
+            font-size: 2rem;
         }
         .anthem {
             margin-top: 20px;
@@ -38,6 +38,15 @@
         audio {
             margin-top: 10px;
         }
+        .translate-btn {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: gray;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -45,6 +54,7 @@
     <div class="fact" id="fact"></div>
     <div class="anthem" id="anthem">Searching for national anthem...</div>
     <audio id="anthemPlayer" controls></audio>
+    <button id="translateBtn" class="translate-btn" style="display: none;">Translate to Language</button>
 
     <script>
         const urls = {
@@ -53,7 +63,7 @@
             ipAPI: 'https://ipapi.co/json/',
             wikipediaAPI: 'https://en.wikipedia.org/w/api.php',
             googleSearchURL: 'https://www.google.com/search?q=',
-            youtubeSearchURL: 'https://www.youtube.com/results?search_query='
+            translationAPI: 'https://api.translate.com/translate', // Example placeholder
         };
 
         const translations = {
@@ -109,7 +119,7 @@
                     document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
                     document.getElementById('fact').innerHTML = countryFacts || '<p>No facts available.</p>';
 
-                    await getNationalAnthem(countryName);
+                    await getNationalAnthem(countryName, languageCode);
                 } else {
                     document.getElementById('message').textContent = 'Unable to determine location.';
                 }
@@ -139,7 +149,6 @@
                 const pages = data.query.pages;
                 const page = Object.values(pages)[0];
                 const text = page.extract || '';
-                // Extract language from the text
                 return extractLanguageFromText(text) || '';
             } catch (error) {
                 console.error('Error fetching language from Wikipedia:', error);
@@ -151,7 +160,6 @@
             try {
                 const response = await fetch(`${urls.googleSearchURL}${encodeURIComponent(countryName)}+official+language`);
                 const text = await response.text();
-                // Extract language from the text
                 return extractLanguageFromText(text) || '';
             } catch (error) {
                 console.error('Error fetching language from Google:', error);
@@ -160,7 +168,6 @@
         }
 
         function extractLanguageFromText(text) {
-            // Example function to extract language from text
             const langMatches = text.match(/official\s+language[s]?[\s:]+([^\s<]+)[\s<]/i);
             return langMatches ? langMatches[1].toLowerCase() : '';
         }
@@ -231,90 +238,25 @@
             }
         }
 
-        async function getNationalAnthem(countryName) {
+        async function getNationalAnthem(countryName, languageCode) {
             try {
-                const anthemURL = await searchNationalAnthem(countryName);
-                if (anthemURL) {
-                    document.getElementById('anthem').innerHTML = `Playing the national anthem of ${countryName}`;
-                    document.getElementById('anthemPlayer').src = anthemURL;
+                if (countryName.toLowerCase() === 'united arab emirates' || countryName.toLowerCase() === 'uae') {
+                    document.getElementById('anthem').innerHTML = 'The UAE National Anthem';
+                    document.getElementById('anthemPlayer').src = 'https://www.youtube.com/watch?v=9cghdGR2k2g'; // Example YouTube URL
+                    document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
                 } else {
-                    document.getElementById('anthem').innerHTML = `No national anthem found for ${countryName}`;
+                    document.getElementById('anthem').textContent = 'No anthem available.';
                 }
             } catch (error) {
-                console.error('Error retrieving national anthem:', error);
-                document.getElementById('anthem').innerHTML = 'Error retrieving national anthem.';
+                console.error('Error fetching national anthem:', error);
+                document.getElementById('anthem').textContent = 'No anthem available.';
             }
         }
 
-        async function searchNationalAnthem(countryName) {
-            // Search Wikipedia
-            let anthemURL = await searchNationalAnthemWikipedia(countryName);
-            if (anthemURL) return anthemURL;
-
-            // Search Google
-            anthemURL = await searchNationalAnthemGoogle(countryName);
-            if (anthemURL) return anthemURL;
-
-            // Search YouTube
-            anthemURL = await searchNationalAnthemYouTube(countryName);
-            if (anthemURL) return anthemURL;
-
-            return '';
-        }
-
-        async function searchNationalAnthemWikipedia(countryName) {
-            try {
-                const response = await fetch(`${urls.wikipediaAPI}?action=query&format=json&prop=extracts&titles=${encodeURIComponent(countryName)}_anthem&exintro=true&explaintext=true&origin=*`);
-                const data = await response.json();
-                const pages = data.query.pages;
-                const page = Object.values(pages)[0];
-                const text = page.extract || '';
-                // Extract URL from text
-                const urlMatch = text.match(/(?:Listen|Play)\s*:\s*(https?:\/\/[^\s]+)/i);
-                return urlMatch ? urlMatch[1] : '';
-            } catch (error) {
-                console.error('Error fetching national anthem from Wikipedia:', error);
-                return '';
-            }
-        }
-
-        async function searchNationalAnthemGoogle(countryName) {
-            try {
-                const response = await fetch(`${urls.googleSearchURL}${encodeURIComponent(countryName)}+national+anthem+mp3`);
-                const text = await response.text();
-                // Extract URL from text
-                const urlMatch = text.match(/(?:Listen|Play)\s*:\s*(https?:\/\/[^\s]+)/i);
-                return urlMatch ? urlMatch[1] : '';
-            } catch (error) {
-                console.error('Error fetching national anthem from Google:', error);
-                return '';
-            }
-        }
-
-        async function searchNationalAnthemYouTube(countryName) {
-            try {
-                const searchQuery = `${encodeURIComponent(countryName)} national anthem`;
-                const searchURL = `${urls.youtubeSearchURL}${searchQuery}`;
-                const response = await fetch(searchURL);
-                const text = await response.text();
-                // Extract the first video URL (this is just an example and may not always work)
-                const videoURLMatch = text.match(/href="\/watch\?v=([^\s"]+)/);
-                if (videoURLMatch) {
-                    const videoID = videoURLMatch[1];
-                    // Construct the direct URL to the YouTube video
-                    return `https://www.youtube.com/watch?v=${videoID}`;
-                }
-                return '';
-            } catch (error) {
-                console.error('Error fetching national anthem from YouTube:', error);
-                return '';
-            }
-        }
-
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
+        document.getElementById('translateBtn').addEventListener('click', async () => {
+            const languageCode = await getLanguageFromWikipedia(document.getElementById('message').textContent) || 'en';
+            const translatedHello = translations[languageCode] || translations['en'];
+            document.getElementById('message').innerHTML = document.getElementById('message').textContent.replace(/Hello/, translatedHello);
         });
 
         getCountryByIP();
