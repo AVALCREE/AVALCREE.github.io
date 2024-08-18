@@ -12,6 +12,7 @@
             color: gray;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -30,11 +31,20 @@
             margin-top: 20px;
             font-size: 2rem; /* Same size as .message */
         }
+        .anthem {
+            margin-top: 20px;
+            font-size: 1.5rem;
+        }
+        audio {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="message" id="message">Loading...</div>
     <div class="fact" id="fact"></div>
+    <div class="anthem" id="anthem">Searching for national anthem...</div>
+    <audio id="anthemPlayer" controls></audio>
 
     <script>
         const urls = {
@@ -42,7 +52,8 @@
             languages: 'https://raw.githubusercontent.com/vire/country.json/master/src/country-languages.json',
             ipAPI: 'https://ipapi.co/json/',
             wikipediaAPI: 'https://en.wikipedia.org/w/api.php',
-            googleSearchURL: 'https://www.google.com/search?q='
+            googleSearchURL: 'https://www.google.com/search?q=',
+            youtubeSearchURL: 'https://www.youtube.com/results?search_query='
         };
 
         const translations = {
@@ -97,6 +108,8 @@
 
                     document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
                     document.getElementById('fact').innerHTML = countryFacts || '<p>No facts available.</p>';
+
+                    await getNationalAnthem(countryName);
                 } else {
                     document.getElementById('message').textContent = 'Unable to determine location.';
                 }
@@ -214,6 +227,86 @@
                 return factMatch ? factMatch[1] : '';
             } catch (error) {
                 console.error('Error fetching data from Google:', error);
+                return '';
+            }
+        }
+
+        async function getNationalAnthem(countryName) {
+            try {
+                const anthemURL = await searchNationalAnthem(countryName);
+                if (anthemURL) {
+                    document.getElementById('anthem').innerHTML = `Playing the national anthem of ${countryName}`;
+                    document.getElementById('anthemPlayer').src = anthemURL;
+                } else {
+                    document.getElementById('anthem').innerHTML = `No national anthem found for ${countryName}`;
+                }
+            } catch (error) {
+                console.error('Error retrieving national anthem:', error);
+                document.getElementById('anthem').innerHTML = 'Error retrieving national anthem.';
+            }
+        }
+
+        async function searchNationalAnthem(countryName) {
+            // Search Wikipedia
+            let anthemURL = await searchNationalAnthemWikipedia(countryName);
+            if (anthemURL) return anthemURL;
+
+            // Search Google
+            anthemURL = await searchNationalAnthemGoogle(countryName);
+            if (anthemURL) return anthemURL;
+
+            // Search YouTube
+            anthemURL = await searchNationalAnthemYouTube(countryName);
+            if (anthemURL) return anthemURL;
+
+            return '';
+        }
+
+        async function searchNationalAnthemWikipedia(countryName) {
+            try {
+                const response = await fetch(`${urls.wikipediaAPI}?action=query&format=json&prop=extracts&titles=${encodeURIComponent(countryName)}_anthem&exintro=true&explaintext=true&origin=*`);
+                const data = await response.json();
+                const pages = data.query.pages;
+                const page = Object.values(pages)[0];
+                const text = page.extract || '';
+                // Extract URL from text
+                const urlMatch = text.match(/(?:Listen|Play)\s*:\s*(https?:\/\/[^\s]+)/i);
+                return urlMatch ? urlMatch[1] : '';
+            } catch (error) {
+                console.error('Error fetching national anthem from Wikipedia:', error);
+                return '';
+            }
+        }
+
+        async function searchNationalAnthemGoogle(countryName) {
+            try {
+                const response = await fetch(`${urls.googleSearchURL}${encodeURIComponent(countryName)}+national+anthem+mp3`);
+                const text = await response.text();
+                // Extract URL from text
+                const urlMatch = text.match(/(?:Listen|Play)\s*:\s*(https?:\/\/[^\s]+)/i);
+                return urlMatch ? urlMatch[1] : '';
+            } catch (error) {
+                console.error('Error fetching national anthem from Google:', error);
+                return '';
+            }
+        }
+
+        async function searchNationalAnthemYouTube(countryName) {
+            try {
+                const searchQuery = `${encodeURIComponent(countryName)} national anthem`;
+                const searchURL = `${urls.youtubeSearchURL}${searchQuery}`;
+                const response = await fetch(searchURL);
+                const text = await response.text();
+                // Extract the first video URL (this is just an example and may not always work)
+                const videoURLMatch = text.match(/href="\/watch\?v=([^\s"]+)/);
+                if (videoURLMatch) {
+                    const videoID = videoURLMatch[1];
+                    // Construct the direct URL to the YouTube video
+                    return `https://www.youtube.com/watch?v=${videoID}`;
+                }
+                return '';
+            } catch (error) {
+                console.error('Error fetching national anthem from YouTube:', error);
                 return '';
             }
         }
