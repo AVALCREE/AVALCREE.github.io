@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch the Ball Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #87CEEB;
+        }
+        .game-container {
+            position: relative;
+            margin: 0 auto;
+            width: 600px;
+            height: 400px;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            overflow: hidden;
+        }
+        #paddle {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            width: 100px;
+            height: 20px;
+            background-color: #ff4500;
+            transform: translateX(-50%);
+        }
+        .ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #32CD32;
+            border-radius: 50%;
+        }
+        #score {
+            margin: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="paddle"></div>
+        <div id="score">Score: 0</div>
+    </div>
+    <script>
+        const paddle = document.getElementById('paddle');
+        const gameContainer = document.querySelector('.game-container');
+        const scoreElement = document.getElementById('score');
+        let score = 0;
+        let paddleWidth = paddle.offsetWidth;
+        let containerWidth = gameContainer.offsetWidth;
+        let ballDiameter = 20;
+        
+        function createBall() {
+            const ball = document.createElement('div');
+            ball.classList.add('ball');
+            ball.style.top = '0px';
+            ball.style.left = Math.random() * (containerWidth - ballDiameter) + 'px';
+            gameContainer.appendChild(ball);
+            return ball;
+        }
+        
+        function movePaddle(e) {
+            let newX = e.clientX - gameContainer.getBoundingClientRect().left - paddleWidth / 2;
+            if (newX < 0) newX = 0;
+            if (newX > containerWidth - paddleWidth) newX = containerWidth - paddleWidth;
+            paddle.style.left = newX + 'px';
+        }
+        
+        function updateGame() {
+            const balls = document.querySelectorAll('.ball');
+            balls.forEach(ball => {
+                let ballTop = parseFloat(ball.style.top);
+                ballTop += 5; // Ball speed
+                ball.style.top = ballTop + 'px';
+                
+                if (ballTop > gameContainer.offsetHeight - ballDiameter) {
+                    const ballLeft = parseFloat(ball.style.left);
+                    const paddleLeft = parseFloat(paddle.style.left);
+                    
+                    if (ballLeft + ballDiameter > paddleLeft && ballLeft < paddleLeft + paddleWidth) {
+                        score++;
+                        scoreElement.textContent = 'Score: ' + score;
+                        ball.remove();
+                    } else {
+                        ball.remove();
+                    }
+                }
+            });
+            
+            if (Math.random() < 0.02) { // Chance of creating a new ball
+                createBall();
+            }
+        }
+        
+        setInterval(updateGame, 20);
+        document.addEventListener('mousemove', movePaddle);
+    </script>
+</body>
+</html>
