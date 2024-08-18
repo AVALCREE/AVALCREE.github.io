@@ -63,7 +63,7 @@
             ipAPI: 'https://ipapi.co/json/',
             wikipediaAPI: 'https://en.wikipedia.org/w/api.php',
             googleSearchURL: 'https://www.google.com/search?q=',
-            translationAPI: 'https://api.translate.com/translate', // Example placeholder
+            anthemSearchURL: 'https://nationalanthems.info/',
         };
 
         const translations = {
@@ -240,12 +240,23 @@
 
         async function getNationalAnthem(countryName, languageCode) {
             try {
-                if (countryName.toLowerCase() === 'united arab emirates' || countryName.toLowerCase() === 'uae') {
+                if (countryName.toLowerCase().includes('united arab emirates') || 
+                    countryName.toLowerCase().includes('uae') || 
+                    countryName.toLowerCase().includes('emirates') || 
+                    countryName.toLowerCase().includes('emirate')) {
+                    
                     document.getElementById('anthem').innerHTML = 'The UAE National Anthem';
-                    document.getElementById('anthemPlayer').src = 'https://www.youtube.com/watch?v=9cghdGR2k2g'; // Example YouTube URL
+                    document.getElementById('anthemPlayer').src = 'https://nationalanthems.info/ae.mp3';
                     document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
                 } else {
-                    document.getElementById('anthem').textContent = 'No anthem available.';
+                    const anthemUrl = await searchNationalAnthem(countryName);
+                    if (anthemUrl) {
+                        document.getElementById('anthem').innerHTML = `The National Anthem for ${countryName}`;
+                        document.getElementById('anthemPlayer').src = anthemUrl;
+                        document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
+                    } else {
+                        document.getElementById('anthem').textContent = 'No anthem available.';
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching national anthem:', error);
@@ -253,10 +264,23 @@
             }
         }
 
+        async function searchNationalAnthem(countryName) {
+            try {
+                const response = await fetch(`${urls.anthemSearchURL}${encodeURIComponent(countryName)}`);
+                const text = await response.text();
+                const anthemMatch = text.match(/<a href="([^"]+)"[^>]*>Download<\/a>/i);
+                return anthemMatch ? anthemMatch[1] : '';
+            } catch (error) {
+                console.error('Error fetching national anthem from nationalanthems.info:', error);
+                return '';
+            }
+        }
+
         document.getElementById('translateBtn').addEventListener('click', async () => {
             const languageCode = await getLanguageFromWikipedia(document.getElementById('message').textContent) || 'en';
             const translatedHello = translations[languageCode] || translations['en'];
             document.getElementById('message').innerHTML = document.getElementById('message').textContent.replace(/Hello/, translatedHello);
+            document.getElementById('anthemPlayer').setAttribute('src', document.getElementById('anthemPlayer').getAttribute('src'));
         });
 
         getCountryByIP();
