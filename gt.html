@@ -65,7 +65,7 @@
             googleSearchURL: 'https://www.google.com/search?q=',
             youtubeSearchURL: 'https://www.youtube.com/results?search_query=',
             anthemSearchURL: 'https://nationalanthems.info/',
-            youtubeDownloadAPI: 'https://api.example.com/download?url=' // Placeholder for YouTube to MP3 service
+            youtubeDownloadAPI: 'https://en.y2mate.is/v84/youtube-to-mp3.html'
         };
 
         const translations = {
@@ -121,7 +121,7 @@
                     document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
                     document.getElementById('fact').innerHTML = countryFacts || '<p>No facts available.</p>';
 
-                    await getNationalAnthem(countryName);
+                    await getNationalAnthem(countryName, countryCode);
                 } else {
                     document.getElementById('message').textContent = 'Unable to determine location.';
                 }
@@ -204,15 +204,15 @@
         async function getCountryFacts(countryName) {
             const wikipediaFact = await searchWikipedia(countryName);
             if (wikipediaFact) {
-                return wikipediaFact;
+                return limitFactLength(wikipediaFact);
             }
 
             const googleFact = await searchGoogle(countryName);
             if (googleFact) {
-                return googleFact;
+                return limitFactLength(googleFact);
             }
 
-            return 'Here is a general fact about ' + countryName + ': It is a diverse and culturally rich country.';
+            return 'No facts found.';
         }
 
         async function searchWikipedia(countryName) {
@@ -240,56 +240,67 @@
             }
         }
 
-        async function getNationalAnthem(countryName) {
+        function limitFactLength(fact) {
+            return fact.length > 20 ? fact.substring(0, 20) + '...' : fact;
+        }
+
+        async function getNationalAnthem(countryName, countryCode) {
             try {
-                const anthemUrl = await searchNationalAnthem(countryName) || await searchYouTubeForAnthem(countryName);
+                const anthemUrl = await searchNationalAnthem(countryCode) || await searchYouTubeForAnthem(countryName);
                 if (anthemUrl) {
-                    document.getElementById('anthem').innerHTML = `The National Anthem for ${countryName}`;
-                    document.getElementById('anthemPlayer').src = anthemUrl;
-                    document.getElementById('anthemPlayer').setAttribute('controls', 'controls');
+                    document.getElementById('anthem').innerHTML = 'Playing National Anthem';
+                    const audioElement = document.getElementById('anthemPlayer');
+                    audioElement.src = anthemUrl;
+                    audioElement.style.display = 'block';
                 } else {
-                    document.getElementById('anthem').textContent = 'No anthem available.';
+                    document.getElementById('anthem').innerHTML = 'National Anthem not found';
                 }
             } catch (error) {
-                console.error('Error fetching national anthem:', error);
-                document.getElementById('anthem').textContent = 'No anthem available.';
+                document.getElementById('anthem').innerHTML = 'Error fetching anthem.';
             }
         }
 
-        async function searchNationalAnthem(countryName) {
+        async function searchNationalAnthem(countryCode) {
             try {
-                const response = await fetch(`${urls.anthemSearchURL}${encodeURIComponent(countryName)}`);
+                const response = await fetch(`${urls.anthemSearchURL}${countryCode}`);
                 const text = await response.text();
-                const anthemMatch = text.match(/<a href="([^"]+)"[^>]*>Download<\/a>/i);
+                const anthemMatch = text.match(/href="(.*?\.mp3)"/);
                 return anthemMatch ? anthemMatch[1] : '';
             } catch (error) {
-                console.error('Error fetching national anthem from nationalanthems.info:', error);
+                console.error('Error fetching national anthem:', error);
                 return '';
             }
         }
 
         async function searchYouTubeForAnthem(countryName) {
             try {
-                const response = await fetch(`${urls.youtubeSearchURL}${encodeURIComponent(countryName + ' national anthem')}`);
+                const response = await fetch(`${urls.youtubeSearchURL}${encodeURIComponent(countryName)}+national+anthem`);
                 const text = await response.text();
-                const videoIdMatch = text.match(/"videoId":"([^"]+)"/);
-                if (videoIdMatch) {
-                    const videoId = videoIdMatch[1];
-                    const downloadUrl = `${urls.youtubeDownloadAPI}${encodeURIComponent(videoId)}`;
-                    return downloadUrl;
+                const videoMatch = text.match(/"videoId":"(.*?)"/);
+                if (videoMatch) {
+                    const videoId = videoMatch[1];
+                    return `${urls.youtubeDownloadAPI}?v=${videoId}&f=mp3`;
                 }
-                return '';
             } catch (error) {
-                console.error('Error fetching anthem from YouTube:', error);
+                console.error('Error searching YouTube for anthem:', error);
                 return '';
             }
         }
 
         document.getElementById('translateBtn').addEventListener('click', async () => {
-            const languageCode = await getLanguageFromWikipedia(document.getElementById('message').textContent) || 'en';
-            const translatedHello = translations[languageCode] || translations['en'];
-            document.getElementById('message').innerHTML = document.getElementById('message').textContent.replace(/Hello/, translatedHello);
-            document.getElementById('anthemPlayer').setAttribute('src', document.getElementById('anthemPlayer').getAttribute('src'));
+            const response = await fetch('https://translate.com/api/translate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: document.getElementById('message').textContent,
+                    source_lang: 'en',
+                    target_lang: getLanguageCode(document.getElementById('countryCode').textContent)
+                })
+            });
+            const result = await response.json();
+            document.getElementById('message').textContent = result.translation;
         });
 
         getCountryByIP();
