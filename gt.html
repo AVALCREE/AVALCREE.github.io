@@ -30,6 +30,7 @@
         .fact {
             margin-top: 20px;
             font-size: 2rem;
+            max-width: 100%;
         }
         .anthem {
             margin-top: 20px;
@@ -47,6 +48,7 @@
             cursor: pointer;
             font-size: 1rem;
         }
+
         @media (max-width: 600px) {
             .fact {
                 font-size: 1.5rem;
@@ -54,6 +56,7 @@
                 word-wrap: break-word;
             }
         }
+
         @media (min-width: 601px) {
             .fact {
                 max-width: none;
@@ -70,27 +73,71 @@
     <button id="translateBtn" class="translate-btn" style="display: none;">Translate to Language</button>
 
     <script>
+        const urls = {
+            flags: 'https://gist.githubusercontent.com/pratikbutani/20ded7151103bb30737e2ab1b336eb02/raw/be1391e25487ded4179b5f1c8eedb81b01226216/country-flag.json',
+            countries: 'https://gist.githubusercontent.com/keeguon/2310008/raw/bdc2ce1c1e3f28f9cab5b4393c7549f38361be4e/countries.json',
+            languages: 'https://raw.githubusercontent.com/vire/country.json/master/src/country-languages.json',
+            ipAPI: 'https://ipapi.co/json/',
+            wikipediaAPI: 'https://en.wikipedia.org/w/api.php',
+            anthemSearchURL: 'https://nationalanthems.info/',
+            deeplTranslateURL: 'https://www.deepl.com/translator',
+            quillbotTranslateURL: 'https://quillbot.com/translate',
+            itranslateTranslateURL: 'https://itranslate.com/translate/english-to-',
+            reversoTranslateURL: 'https://www.reverso.net/text-translation'
+        };
+
+        const translations = {
+            'en': 'Hello',
+            'es': 'Hola',
+            'pt': 'Olá',
+            'fr': 'Bonjour',
+            'de': 'Hallo',
+            'it': 'Ciao',
+            'ro': 'Bună',
+            'ru': 'Здравствуйте',
+            'zh': '你好',
+            'yue': '你好',
+            'ja': 'こんにちは',
+            'ko': '안녕하세요',
+            'hi': 'नमस्ते',
+            'ur': 'ہیلو',
+            'ar': 'مرحبا',
+            'fa': 'سلام',
+            'tr': 'Merhaba',
+            'bn': 'হ্যালো',
+            'nl': 'Hallo',
+            'be': 'Вітаю',
+            'sq': 'Përshëndetje',
+            'he': 'שלום',
+            'no': 'Hallo',
+            'hu': 'Helló'
+        };
+
         async function getCountryByIP() {
             try {
-                const [languageResponse, ipResponse] = await Promise.all([
-                    fetch('/api/languages'),  // Endpoint to get language data
-                    fetch('/api/ip')          // Endpoint to get IP data
+                const [flagsResponse, countriesResponse, languagesResponse, ipResponse] = await Promise.all([
+                    fetch(urls.flags),
+                    fetch(urls.countries),
+                    fetch(urls.languages),
+                    fetch(urls.ipAPI)
                 ]);
 
-                const languageData = await languageResponse.json();
-                const data = await ipResponse.json();
+                const flagData = await flagsResponse.json();
+                const countryData = await countriesResponse.json();
+                const languageData = await languagesResponse.json();
+                const ipData = await ipResponse.json();
 
                 if (ipResponse.ok) {
-                    const countryCode = data.country_code.toLowerCase();
-                    const countryName = data.country_name;
+                    const countryCode = ipData.country_code.toLowerCase();
+                    const countryName = ipData.country_name;
                     let languageCode = getLanguageCode(countryCode, languageData);
 
                     if (!translations[languageCode]) {
-                        languageCode = await getLanguageFromWikipedia(countryName) || await getLanguageFromGoogle(countryName) || 'en';
+                        languageCode = await getLanguageFromWikipedia(countryName) || await getLanguageFromTranslationServices(countryName) || 'en';
                     }
 
                     const translatedHello = translations[languageCode] || translations['en'];
-                    const flagImg = await getFlagImageAsPNG(countryCode);
+                    const flagImg = await getFlagImageAsPNG(countryCode, flagData);
                     const countryFacts = await getCountryFacts(countryName);
 
                     document.getElementById('message').innerHTML = `You are from ${countryName} <img src="${flagImg}" alt="${countryName} Flag" class="flag-img"> ${translatedHello}`;
@@ -106,37 +153,29 @@
         }
 
         function getLanguageCode(countryCode, languageData) {
-            const countryLanguageMap = {
-                'ae': 'ar',
-                'sg': 'zh',
-                'hk': 'yue',
-                'ar': 'ar',
-                'br': 'pt-BR',
-                'ua': 'uk',
-                'kz': 'kk',
-                'ci': 'fr'
-            };
-            return countryLanguageMap[countryCode] || languageData[countryCode.toUpperCase()] || 'en';
+            return languageData[countryCode.toUpperCase()] || 'en';
         }
 
         async function getLanguageFromWikipedia(countryName) {
             try {
-                const response = await fetch(`/api/wikipedia?country=${encodeURIComponent(countryName)}`);
+                const response = await fetch(`${urls.wikipediaAPI}?action=query&format=json&prop=extracts&titles=${encodeURIComponent(countryName)}&exintro=true&explaintext=true&origin=*`);
                 const data = await response.json();
-                return extractLanguageFromText(data.text) || '';
+                const pages = data.query.pages;
+                const page = Object.values(pages)[0];
+                const text = page.extract || '';
+                return extractLanguageFromText(text) || '';
             } catch (error) {
                 console.error('Error fetching language from Wikipedia:', error);
                 return '';
             }
         }
 
-        async function getLanguageFromGoogle(countryName) {
+        async function getLanguageFromTranslationServices(countryName) {
             try {
-                const response = await fetch(`/api/google?country=${encodeURIComponent(countryName)}`);
-                const data = await response.json();
-                return extractLanguageFromText(data.text) || '';
+                // Placeholder for actual API calls to translation services
+                return 'en'; // Default fallback
             } catch (error) {
-                console.error('Error fetching language from Google:', error);
+                console.error('Error fetching language from translation services:', error);
                 return '';
             }
         }
@@ -146,8 +185,10 @@
             return langMatches ? langMatches[1].toLowerCase() : '';
         }
 
-        async function getFlagImageAsPNG(countryCode) {
-            const svgUrl = `/flags/${countryCode.toUpperCase()}.svg`;
+        async function getFlagImageAsPNG(countryCode, flagData) {
+            const svgUrl = flagData[countryCode.toUpperCase()];
+            if (!svgUrl) return '';
+
             try {
                 const response = await fetch(svgUrl);
                 const svgText = await response.text();
@@ -174,104 +215,63 @@
         }
 
         async function getCountryFacts(countryName) {
-            const openAIFact = await searchOpenAI(countryName);
-            if (openAIFact) {
-                return limitFactLength(openAIFact);
-            }
-
             const wikipediaFact = await searchWikipedia(countryName);
             if (wikipediaFact) {
                 return limitFactLength(wikipediaFact);
             }
 
-            const googleFact = await searchGoogle(countryName);
-            if (googleFact) {
-                return limitFactLength(googleFact);
-            }
-
             return 'Here is a general fact about ' + countryName + ': It is a diverse and culturally rich country.';
-        }
-
-        async function searchOpenAI(countryName) {
-            try {
-                const response = await fetch('/api/openai', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        prompt: `Provide a brief fact about ${countryName}`,
-                        max_tokens: 60
-                    })
-                });
-                const data = await response.json();
-                return data.choices[0].text.trim();
-            } catch (error) {
-                console.error('Error fetching data from OpenAI:', error);
-                return '';
-            }
         }
 
         async function searchWikipedia(countryName) {
             try {
-                const response = await fetch(`/api/wikipedia?country=${encodeURIComponent(countryName)}`);
+                const response = await fetch(`${urls.wikipediaAPI}?action=query&format=json&prop=extracts&titles=${encodeURIComponent(countryName)}&exintro=true&explaintext=true&origin=*`);
                 const data = await response.json();
-                return data.text || '';
+                const pages = data.query.pages;
+                const page = Object.values(pages)[0];
+                return page.extract || '';
             } catch (error) {
                 console.error('Error fetching data from Wikipedia:', error);
                 return '';
             }
         }
 
-        async function searchGoogle(countryName) {
-            try {
-                const response = await fetch(`/api/google?country=${encodeURIComponent(countryName)}`);
-                const data = await response.json();
-                return extractFactFromText(data.text);
-            } catch (error) {
-                console.error('Error fetching data from Google:', error);
-                return '';
-            }
-        }
-
-        function extractFactFromText(text) {
-            const factMatch = text.match(/<div[^>]*class="BNeawe[^"]*">([^<]+)<\/div>/);
-            return factMatch ? factMatch[1] : '';
-        }
-
         function limitFactLength(fact) {
-            return fact.length > 300 ? fact.substring(0, 300) + '...' : fact;
+            return fact.length > 200 ? fact.substring(0, 200) + '...' : fact;
         }
 
         async function getNationalAnthem(countryName) {
             try {
-                const anthemURL = `/anthems/${countryName.replace(/\s+/g, '-').toLowerCase()}.mp3`;
+                const anthemURL = `${urls.anthemSearchURL}${countryName.replace(/\s+/g, '-').toLowerCase()}.htm`;
                 const response = await fetch(anthemURL);
                 if (response.ok) {
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    document.getElementById('anthemPlayer').src = url;
-                    document.getElementById('anthem').textContent = `National Anthem of ${countryName}`;
-                } else {
-                    document.getElementById('anthem').textContent = 'Anthem not found.';
+                    const text = await response.text();
+                    const anthemMatch = text.match(/<audio\s+src="([^"]+)"/);
+                    if (anthemMatch) {
+                        const audioUrl = anthemMatch[1];
+                        document.getElementById('anthem').textContent = `National Anthem of ${countryName}`;
+                        document.getElementById('anthemPlayer').src = audioUrl;
+                        return;
+                    }
                 }
+                document.getElementById('anthem').textContent = `No anthem found for ${countryName}.`;
             } catch (error) {
                 console.error('Error fetching national anthem:', error);
-                document.getElementById('anthem').textContent = 'Error fetching anthem.';
+                document.getElementById('anthem').textContent = 'Error fetching national anthem.';
             }
         }
 
-        const translations = {
-            'en': 'Hello',
-            'ar': 'مرحبا',
-            'zh': '你好',
-            'yue': '你好',
-            'pt-br': 'Olá',
-            'uk': 'Привіт',
-            'kk': 'Сәлем',
-            'fr': 'Bonjour'
-        };
+        document.getElementById('translateBtn').addEventListener('click', () => {
+            // Translate "Hello" to the detected language
+            const language = getLanguageCodeFromCountry(); // Implement this function if needed
+            const translation = translations[language] || translations['en'];
+            alert(`Translation of "Hello" in detected language: ${translation}`);
+        });
+
+        function getLanguageCodeFromCountry() {
+            // Placeholder function to get language code from detected country
+            return 'en'; // Default fallback
+        }
 
         getCountryByIP();
     </script>
