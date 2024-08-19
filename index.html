@@ -148,7 +148,7 @@
         <h1>Welcome to My Website</h1>
         <div class="button-container">
             <button onclick="window.location.href='avalcree.github.io/Files';">
-                Files Archive
+                Files
             </button>
             
             <button onclick="window.location.href='https://frits8882992.itch.io/ar';">
@@ -216,49 +216,48 @@
     <!-- Audio elements for sound effects -->
     <audio id="jumpscare-sound" src="https://www.myinstants.com/media/sounds/amogus.mp3" preload="auto"></audio>
     <!-- Additional sound effects -->
-    <audio id="additional-sound" src="https://www.myinstants.com/media/sounds/trollge.mp3" preload="auto"></audio>
+    <audio id="additional-sound" src="https://www.myinstants.com/media/sounds/fnaf-honk.mp3" preload="auto"></audio>
 
     <script>
-        let jumpscareTimeout;
-        let jumpscareShown = false;
-
-        // Automatically show jumpscare after 30 seconds
-        setTimeout(() => {
-            if (!jumpscareShown) {
-                toggleJumpscare();
-            }
-        }, 30000);
-
+        // Function to show icons
         function showIcons() {
             document.querySelector('.icon.unity').style.display = 'block';
             document.querySelector('.icon.gorilla-tag').style.display = 'block';
             document.querySelector('.icon.rolling-image').style.display = 'block';
+
+            setTimeout(() => {
+                document.querySelector('.icon.unity').style.display = 'none';
+                document.querySelector('.icon.gorilla-tag').style.display = 'none';
+            }, 10000); // Disappear after 10 seconds
         }
 
+        // Jumpscare functionality
         function toggleJumpscare() {
-            const jumpscareElement = document.getElementById('jumpscare');
-            const jumpscareSound = document.getElementById('jumpscare-sound');
-            jumpscareElement.style.display = jumpscareElement.style.display === 'flex' ? 'none' : 'flex';
-            if (jumpscareElement.style.display === 'flex') {
-                jumpscareSound.play();
-                jumpscareShown = true;
+            const jumpscare = document.getElementById('jumpscare');
+            if (jumpscare.style.display === 'none') {
+                jumpscare.style.display = 'flex';
+                document.getElementById('jumpscare-sound').play();
             } else {
-                jumpscareSound.pause();
-                jumpscareSound.currentTime = 0;
-                jumpscareShown = false;
+                jumpscare.style.display = 'none';
             }
         }
 
+        // Handle Jumpscare Response
         function handleJumpscareResponse(response) {
-            const additionalSound = document.getElementById('additional-sound');
-            if (response === 'yes') {
-                alert('Glad you enjoyed it!');
-            } else {
-                alert('Oh, sorry!');
-            }
+            alert(response === 'yes' ? 'Boo!' : 'I\'ll get you next time!');
             toggleJumpscare();
-            additionalSound.play();
         }
+
+        // Automatic jumpscare after 30 seconds
+        setTimeout(() => {
+            toggleJumpscare();
+        }, 30000);
+
+        // Rolling image toggle functionality
+        setTimeout(() => {
+            const rollingImage = document.querySelector('.icon.rolling-image');
+            rollingImage.style.display = 'block';
+        }, 600000); // Appear after 10 minutes
     </script>
 </body>
 </html>
