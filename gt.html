@@ -133,7 +133,7 @@
                     let languageCode = getLanguageCode(countryCode, languageData);
 
                     if (!translations[languageCode]) {
-                        languageCode = await getLanguageFromWikipedia(countryName) || await getLanguageFromTranslationServices(countryName) || 'en';
+                        languageCode = await getLanguageFromWikipedia(countryName) || 'en';
                     }
 
                     const translatedHello = translations[languageCode] || translations['en'];
@@ -166,16 +166,6 @@
                 return extractLanguageFromText(text) || '';
             } catch (error) {
                 console.error('Error fetching language from Wikipedia:', error);
-                return '';
-            }
-        }
-
-        async function getLanguageFromTranslationServices(countryName) {
-            try {
-                // Placeholder for actual API calls to translation services
-                return 'en'; // Default fallback
-            } catch (error) {
-                console.error('Error fetching language from translation services:', error);
                 return '';
             }
         }
@@ -215,12 +205,17 @@
         }
 
         async function getCountryFacts(countryName) {
-            const wikipediaFact = await searchWikipedia(countryName);
-            if (wikipediaFact) {
-                return limitFactLength(wikipediaFact);
-            }
+            try {
+                const wikipediaFact = await searchWikipedia(countryName);
+                if (wikipediaFact) {
+                    return limitFactLength(wikipediaFact);
+                }
 
-            return 'Here is a general fact about ' + countryName + ': It is a diverse and culturally rich country.';
+                return 'Here is a general fact about ' + countryName + ': It is a diverse and culturally rich country.';
+            } catch (error) {
+                console.error('Error fetching country facts:', error);
+                return 'Error retrieving country facts.';
+            }
         }
 
         async function searchWikipedia(countryName) {
@@ -246,34 +241,23 @@
                 const response = await fetch(anthemURL);
                 if (response.ok) {
                     const text = await response.text();
-                    const anthemMatch = text.match(/<audio\s+src="([^"]+)"/);
+                    const anthemMatch = text.match(/<audio[^>]*src="([^"]*)"/);
                     if (anthemMatch) {
-                        const audioUrl = anthemMatch[1];
+                        const anthemSrc = anthemMatch[1];
                         document.getElementById('anthem').textContent = `National Anthem of ${countryName}`;
-                        document.getElementById('anthemPlayer').src = audioUrl;
-                        return;
+                        document.getElementById('anthemPlayer').src = anthemSrc;
+                    } else {
+                        document.getElementById('anthem').textContent = 'Anthem not found.';
                     }
+                } else {
+                    document.getElementById('anthem').textContent = 'Anthem search failed.';
                 }
-                document.getElementById('anthem').textContent = `No anthem found for ${countryName}.`;
             } catch (error) {
-                console.error('Error fetching national anthem:', error);
-                document.getElementById('anthem').textContent = 'Error fetching national anthem.';
+                document.getElementById('anthem').textContent = 'Error retrieving national anthem.';
             }
         }
 
-        document.getElementById('translateBtn').addEventListener('click', () => {
-            // Translate "Hello" to the detected language
-            const language = getLanguageCodeFromCountry(); // Implement this function if needed
-            const translation = translations[language] || translations['en'];
-            alert(`Translation of "Hello" in detected language: ${translation}`);
-        });
-
-        function getLanguageCodeFromCountry() {
-            // Placeholder function to get language code from detected country
-            return 'en'; // Default fallback
-        }
-
-        getCountryByIP();
+        window.onload = getCountryByIP;
     </script>
 </body>
 </html>
