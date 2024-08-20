@@ -15,6 +15,23 @@
             text-align: center;
             margin-top: 20px;
         }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -22,9 +39,25 @@
         <source src="videos/trumpet.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-    <div id="info">Press numbers 1 to 8 to jump to specific times in the video.</div>
+    <div id="info">Press numbers 1 to 9 or click the buttons below to jump to specific times in the video.</div>
+    <div class="button-container">
+        <button class="button" onclick="jumpToTime(15)">1</button>
+        <button class="button" onclick="jumpToTime(30)">2</button>
+        <button class="button" onclick="jumpToTime(35)">3</button>
+        <button class="button" onclick="jumpToTime(60)">4</button>
+        <button class="button" onclick="jumpToTime(75)">5</button>
+        <button class="button" onclick="jumpToTime(90)">6</button>
+        <button class="button" onclick="jumpToTime(105)">7</button>
+        <button class="button" onclick="jumpToTime(120)">8</button>
+        <button class="button" onclick="jumpToTime(135)">9</button>
+    </div>
     <script>
         const video = document.getElementById('videoPlayer');
+
+        function jumpToTime(startTime) {
+            video.currentTime = startTime;
+            video.play();
+        }
 
         document.addEventListener('keydown', function(event) {
             const key = event.key;
