@@ -3,261 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Website</title>
+    <title>Modern Website</title>
+    <!-- Link to External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
     <style>
+        /* Global Styles */
         body {
             margin: 0;
-            padding: 0;
-            background: url('https://images.pexels.com/photos/3770757/pexels-photo-3770757.jpeg') no-repeat center center fixed;
-            background-size: cover;
-            color: white;
             font-family: Arial, sans-serif;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #f0f0f0;
             overflow: hidden;
             position: relative;
+            background: url('images/background.jpg') no-repeat center center fixed; 
+            background-size: cover; /* Cover the whole page */
         }
-        .container {
-            padding: 20px;
-            max-width: 600px;
-            width: 100%;
-            box-sizing: border-box;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-        }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        button {
-            background-color: rgba(255, 255, 255, 0.2);
+
+        /* Header Styles */
+        header {
+            background-color: rgba(51, 51, 51, 0.8);
             color: white;
-            border: 2px solid white;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin: 5px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s, border-color 0.3s;
-            width: 100%;
-            max-width: 300px;
+            padding: 10px;
+            font-size: 24px;
+            text-align: center;
         }
-        button img {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
-        }
-        button:hover {
-            background-color: rgba(255, 255, 255, 0.4);
-            border-color: #00ff7f;
-        }
-        .hidden {
-            display: none;
-        }
-        .invisible-button, .toggle-jumpscare-button {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 1000;
-            outline: none;
-        }
-        .invisible-button {
-            top: 10px;
-            right: 10px;
-        }
-        .toggle-jumpscare-button {
+
+        /* Dancing Cat GIF */
+        #dancing-cat {
+            position: fixed;
             bottom: 10px;
             right: 10px;
-        }
-        .invisible-button:hover, .toggle-jumpscare-button:hover {
-            background-color: transparent;
-            box-shadow: none;
-        }
-        .icon {
-            position: absolute;
             width: 100px;
-            height: 100px;
-            animation: moveAround 10s linear infinite;
-            display: none;
+            z-index: 1000;
         }
-        .icon.unity { top: 10%; left: 10%; }
-        .icon.gorilla-tag { top: 70%; left: 70%; width: 250px; height: 125px; } /* Made wider */
-        .icon.rolling-image { top: 40%; left: 40%; width: 150px; height: 200px; } /* Made taller */
-        @keyframes moveAround {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(100px, 100px); }
-            50% { transform: translate(0, 200px); }
-            75% { transform: translate(-100px, 100px); }
-            100% { transform: translate(0, 0); }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .jumpscare {
-            display: none;
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        /* Highlight Section */
+        .highlight {
+            background-color: rgba(224, 224, 224, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 20px auto;
+            max-width: 80%;
+        }
+
+        /* Jumpscare Styles */
+        #jumpscare {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            font-size: 2rem;
-            text-align: center;
-            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
             align-items: center;
+            justify-content: center;
             z-index: 2000;
         }
-        .jumpscare img {
-            width: 100%;
+
+        #jumpscare img {
+            width: 300px;
             height: auto;
-            max-height: 100vh;
-            object-fit: cover;
         }
-        .jumpscare button {
-            background-color: white;
-            color: black;
+
+        #close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: red;
+            color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 1.2rem;
+            padding: 10px;
             cursor: pointer;
-            margin: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
         }
-        .jumpscare button:hover {
-            background-color: #00ff7f;
-            color: black;
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .btn {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            #dancing-cat {
+                width: 80px;
+            }
+
+            .highlight {
+                width: 90%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Website</h1>
-        <div class="button-container">
-            <button onclick="window.location.href='avalcree.github.io/Files';">
-                Files
-            </button>
-            
-            <button onclick="window.location.href='https://frits8882992.itch.io/ar';">
-                <img src="https://img.icons8.com/?size=256&id=zfuVDK4SdKFq&format=png" alt="Itch.io">
-                Download My Gorilla Tag Fan Game
-            </button>
-            <button onclick="window.location.href='https://youtube.com/@jumppz.gt1?si=WrHk0SC5niKcgSNK';">
-                <img src="https://img.icons8.com/ios-filled/50/000000/youtube.png" alt="YouTube">
-                Go to My YouTube
-            </button>
-            <button onclick="window.location.href='https://dsc.gg/guy2828';">
-                <img src="https://img.icons8.com/ios-filled/50/000000/discord.png" alt="Discord">
-                Join My Discord
-            </button>
-            <button onclick="window.location.href='https://avalcree.github.io/sus';">
-                SUS
-            </button>
-            <button onclick="window.location.href='https://avalcree.github.io/b';">
-                Ball Game
-            </button>
-            <button onclick="window.location.href='https://avalcree.github.io/projectlzr';">
-                Leave a Message To My Email
-            </button>
-            <!-- New Chrome Dino button -->
-            <button onclick="window.location.href='https://avalcree.github.io/dino';">
-                Chrome Dino
-            </button>
-            <!-- New "Check where you're from!" button -->
-            <button onclick="window.location.href='https://avalcree.github.io/gt';">
-                Check where you're from!
-            </button>
+
+    <!-- Header -->
+    <header>
+        Modern Website - Powered by ChatGPT
+    </header>
+
+    <!-- Container for content -->
+    <div id="container">
+        <!-- Dancing Cat GIF -->
+        <img id="dancing-cat" src="images/dancing-cat.gif" alt="Dancing Cat">
+
+        <!-- Modern Buttons -->
+        <div id="buttons">
+            <a href="https://example.com" class="btn">Files (COMING SOON)</a>
+            <a href="https://youtube.com" class="btn">YOUTUBE</a>
+            <a href="https://google.com" class="btn">Google</a>
         </div>
-        <div class="shoutout-text">
-            <img src="https://img.icons8.com/ios-filled/50/000000/chatgpt.png" alt="ChatGPT">
-            Shout out to ChatGPT For Helping Me Make This Website
+
+        <!-- Highlighted Section -->
+        <div class="highlight">
+            <h2>Highlighted Section</h2>
+            <p>Content goes here. Add your custom text and style as needed.</p>
         </div>
-        <div class="dancing-cat">
-            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Dancing Cat">
+
+        <!-- Additional Highlighted Sections -->
+        <div class="highlight">
+            <h2>Another Section</h2>
+            <p>More content goes here. Use this space to add more information or features.</p>
         </div>
     </div>
 
-    <!-- Invisible buttons -->
-    <button class="invisible-button" onclick="showIcons()"></button>
-    <button class="toggle-jumpscare-button" onclick="toggleJumpscare()"></button>
-
-    <!-- Unity and Gorilla Tag icons -->
-    <a href="https://unity.com/" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/50/000000/unity.png" alt="Unity" class="icon unity">
-    </a>
-    <a href="https://www.gorillatagvr.com/" target="_blank">
-        <img src="https://cdn2.steamgriddb.com/logo_thumb/a66f8f0921301a9b92d41aec1644b0a5.png" alt="Gorilla Tag" class="icon gorilla-tag">
-    </a>
-    
-    <!-- Rolling image -->
-    <img src="https://raw.githubusercontent.com/AVALCREE/avalcree.github.io/master/screens/cet-removebg-preview.png" alt="Rolling Image" class="icon rolling-image">
-
-    <!-- Jumpscare overlay -->
-    <div class="jumpscare" id="jumpscare">
-        <img src="https://gifdb.com/images/high/fnaf-cat-jumpscare-meme-vezf6psx230cy9nv.gif" alt="Cat Jumpscare">
-        <div>Did I scare you?</div>
-        <button onclick="handleJumpscareResponse('yes')">Yes</button>
-        <button onclick="handleJumpscareResponse('no')">No</button>
+    <!-- Jumpscare -->
+    <div id="jumpscare">
+        <button id="close-btn">Close</button>
+        <img src="images/jumpscare-image.gif" alt="Jumpscare">
     </div>
 
-    <!-- Audio elements for sound effects -->
-    <audio id="jumpscare-sound" src="https://www.myinstants.com/media/sounds/amogus.mp3" preload="auto"></audio>
-    <!-- Additional sound effects -->
-    <audio id="additional-sound" src="https://www.myinstants.com/media/sounds/fnaf-honk.mp3" preload="auto"></audio>
+    <!-- Sound Effects -->
+    <audio id="button-sound" src="sounds/button-sound.mp3"></audio>
+    <audio id="jumpscare-sound" src="sounds/jumpscare-sound.mp3"></audio>
 
+    <!-- Scripts -->
     <script>
-        // Function to show icons
-        function showIcons() {
-            document.querySelector('.icon.unity').style.display = 'block';
-            document.querySelector('.icon.gorilla-tag').style.display = 'block';
-            document.querySelector('.icon.rolling-image').style.display = 'block';
+        // Function to show jumpscare once
+        let jumpscareShown = false;
 
-            setTimeout(() => {
-                document.querySelector('.icon.unity').style.display = 'none';
-                document.querySelector('.icon.gorilla-tag').style.display = 'none';
-            }, 10000); // Disappear after 10 seconds
-        }
-
-        // Jumpscare functionality
-        function toggleJumpscare() {
-            const jumpscare = document.getElementById('jumpscare');
-            if (jumpscare.style.display === 'none') {
-                jumpscare.style.display = 'flex';
+        function showJumpscare() {
+            if (!jumpscareShown) {
+                document.getElementById('jumpscare').style.display = 'flex';
                 document.getElementById('jumpscare-sound').play();
-            } else {
-                jumpscare.style.display = 'none';
+                jumpscareShown = true;
             }
         }
 
-        // Handle Jumpscare Response
-        function handleJumpscareResponse(response) {
-            alert(response === 'yes' ? 'Boo!' : 'I\'ll get you next time!');
-            toggleJumpscare();
-        }
+        // Show jumpscare on page load
+        window.onload = showJumpscare;
 
-        // Automatic jumpscare after 30 seconds
-        setTimeout(() => {
-            toggleJumpscare();
-        }, 30000);
+        // Close jumpscare button functionality
+        document.getElementById('close-btn').addEventListener('click', function() {
+            document.getElementById('jumpscare').style.display = 'none';
+            document.getElementById('button-sound').play();
+        });
 
-        // Rolling image toggle functionality
-        setTimeout(() => {
-            const rollingImage = document.querySelector('.icon.rolling-image');
-            rollingImage.style.display = 'block';
-        }, 600000); // Appear after 10 minutes
+        // Button click sound effect
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.getElementById('button-sound').play();
+            });
+        });
     </script>
+
 </body>
 </html>
