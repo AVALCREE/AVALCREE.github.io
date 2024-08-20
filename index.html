@@ -9,11 +9,9 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            overflow: hidden;
-            position: relative;
             background: url('images/background.jpg') no-repeat center center fixed;
             background-size: cover;
+            overflow: hidden;
         }
 
         /* Header Styles */
@@ -23,6 +21,8 @@
             padding: 10px;
             font-size: 24px;
             text-align: center;
+            position: relative;
+            z-index: 1000;
         }
 
         /* Dancing Cat GIF */
@@ -32,6 +32,11 @@
             right: 10px;
             width: 100px;
             z-index: 1100;
+            transition: transform 1s ease-in-out;
+        }
+
+        #dancing-cat:hover {
+            transform: rotate(360deg) scale(1.2);
         }
 
         /* Button Styles */
@@ -288,8 +293,8 @@
 
         <!-- Additional Highlighted Sections -->
         <div class="highlight">
-            <h2>Another Section</h2>
-            <p>More content goes here. Use this space to add more information or features.</p>
+            <h2>Another Highlight</h2>
+            <p>Additional content or features.</p>
         </div>
     </div>
 
@@ -301,7 +306,7 @@
 
     <!-- Fake Ad -->
     <div id="fake-ad">
-        <p>✨ Check out Amazon! ✨<a href="https://amazon.com"><img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/amazon-512.png" alt="Amazon Logo">Visit Now</a></p>
+        ✨ Check out Amazon! ✨ <a href="https://amazon.com"><img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/amazon-512.png" alt="Amazon Logo">Visit Now</a>
     </div>
 
     <!-- Location Text -->
@@ -337,7 +342,10 @@
         }
 
         // Show jumpscare on page load
-        window.onload = showJumpscare;
+        window.onload = function() {
+            showJumpscare();
+            updateLocation();
+        };
 
         // Close jumpscare button functionality
         document.getElementById('close-btn').addEventListener('click', function() {
@@ -369,36 +377,30 @@
             document.getElementById('button-sound').play();
         }
 
-        // Update location text using a free API with public IP as fallback
+        // Update location text using a public IP lookup API with a fallback
         function updateLocation() {
             const locationElement = document.getElementById('location');
-            fetch('https://ipinfo.io/json')
+            const defaultLocation = 'Location: Unable to determine your IP location.';
+
+            // Attempt to use a proxy API to bypass client-side blocks
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ip = data.ip;
+                    return fetch(`https://ipinfo.io/${ip}/json`);
+                })
                 .then(response => response.json())
                 .then(data => {
                     locationElement.textContent = `Location: ${data.city || 'Unknown City'}, ${data.region || 'Unknown Region'}, ${data.country || 'Unknown Country'}`;
                 })
                 .catch(() => {
-                    console.error('Error fetching public IP location. Trying fallback.');
-                    fetch('https://ipinfo.io/8.8.8.8/json?token=7ded7e30a2fa5e')
-                        .then(response => response.json())
-                        .then(data => {
-                            locationElement.textContent = `Location: ${data.city || 'Unknown City'}, ${data.region || 'Unknown Region'}, ${data.country || 'Unknown Country'}`;
-                        })
-                        .catch(() => {
-                            locationElement.textContent = 'Location: Unable to determine your IP location.';
-                        })
-                        .finally(() => {
-                            locationElement.classList.add('show');
-                        });
+                    console.error('Error fetching location data.');
+                    locationElement.textContent = defaultLocation;
                 })
                 .finally(() => {
                     locationElement.classList.add('show');
                 });
         }
-
-        // Initial location update
-        updateLocation();
     </script>
-
 </body>
 </html>
