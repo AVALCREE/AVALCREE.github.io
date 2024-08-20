@@ -3,109 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Futuristic Website</title>
+    <title>Modern Website</title>
     <style>
-        /* Reset default margins and paddings */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Body and Background */
+        /* Global Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('images/background.jpg');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
             overflow: hidden;
-            height: 100vh;
-            color: #fff;
-        }
-
-        /* Header Styling */
-        header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            text-align: center;
-            font-size: 28px;
-            text-shadow: 2px 2px 4px #000;
             position: relative;
-            z-index: 1000;
+            background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover;
         }
 
-        /* Cat GIF */
+        /* Header Styles */
+        header {
+            background-color: rgba(51, 51, 51, 0.8);
+            color: white;
+            padding: 10px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /* Dancing Cat GIF */
         #dancing-cat {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+            position: fixed;
+            bottom: 60px;
+            right: 10px;
             width: 100px;
             z-index: 1100;
-            transition: transform 1s ease-in-out;
-            animation: spinCat 10s infinite linear;
-        }
-
-        @keyframes spinCat {
-            from {transform: rotate(0deg);}
-            to {transform: rotate(360deg);}
         }
 
         /* Button Styles */
         .btn {
             display: inline-block;
-            padding: 15px 25px;
+            padding: 15px 30px;
             margin: 10px;
-            border: 2px solid #00bfff;
+            border: none;
             border-radius: 50px;
-            background: rgba(0, 0, 0, 0.6);
-            color: #00bfff;
-            text-decoration: none;
-            text-align: center;
+            background: linear-gradient(135deg, #00bfff, #1e90ff);
+            color: white;
             font-size: 18px;
-            transition: all 0.3s ease;
+            text-decoration: none;
+            cursor: pointer;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .btn:hover {
-            background: #00bfff;
-            color: #000;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #1e90ff, #00bfff);
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
-        .disabled {
+        .btn:active {
+            background: linear-gradient(135deg, #00bfff, #1e90ff);
+            transform: scale(1.05);
+        }
+
+        .btn.disabled {
             pointer-events: none;
             opacity: 0.5;
         }
 
-        /* Section Highlight */
-        .highlight {
-            margin: 30px auto;
-            padding: 20px;
-            max-width: 80%;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Jumpscare Styling */
+        /* Jumpscare Styles */
         #jumpscare {
             position: fixed;
             top: 50%;
             left: 50%;
             width: 300px;
             height: auto;
-            background: rgba(255, 0, 0, 0.8);
-            padding: 20px;
-            transform: translate(-50%, -50%) scale(0);
+            background: rgba(0, 0, 0, 0.8);
             display: none;
             align-items: center;
             justify-content: center;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
             z-index: 2000;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
         #jumpscare.show {
@@ -116,31 +91,36 @@
 
         #jumpscare img {
             width: 100%;
-            border-radius: 10px;
+            height: auto;
         }
 
-        #close-jumpscare {
-            background: black;
+        #close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
             color: white;
             border: none;
             padding: 10px;
             cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
+            transition: background 0.3s ease;
         }
 
-        /* Fake Ad Styling */
+        #close-btn:hover {
+            background: darkred;
+        }
+
+        /* Fake Ad Styles */
         #fake-ad {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(51, 51, 51, 0.9);
             color: white;
             text-align: center;
-            padding: 15px;
-            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
             z-index: 1000;
         }
 
@@ -148,7 +128,6 @@
             color: #00bfff;
             text-decoration: none;
             font-weight: bold;
-            margin-left: 10px;
         }
 
         #fake-ad img {
@@ -158,42 +137,71 @@
             margin-left: 8px;
         }
 
-        /* Location Display */
+        /* Location Text Styles */
         #location {
             position: fixed;
             bottom: 150px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.8);
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
             padding: 10px;
-            border-radius: 8px;
+            border-radius: 5px;
+            z-index: 1200;
             font-size: 16px;
-            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #location.show {
+            opacity: 1;
+        }
+
+        /* Send Email Button */
+        #send-email-btn {
+            position: fixed;
+            bottom: 200px;
+            left: 10px;
+            padding: 15px 30px;
+            background: #d9534f;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
             z-index: 1200;
         }
 
-        /* Email Popup */
+        #send-email-btn:hover {
+            background: #c9302c;
+        }
+
+        /* Email Popup Styles */
         #email-popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
+            width: 300px;
             background: rgba(0, 0, 0, 0.9);
+            color: white;
             padding: 20px;
             border-radius: 10px;
-            text-align: center;
-            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             display: none;
             z-index: 1300;
-            transition: transform 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
         #email-popup.show {
-            transform: translate(-50%, -50%) scale(1);
             display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         #email-popup h2 {
-            margin-bottom: 15px;
+            margin-top: 0;
         }
 
         #email-popup button {
@@ -203,30 +211,30 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background 0.3s ease;
         }
 
-        /* Media Queries */
+        #email-popup button:hover {
+            background: darkred;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .btn {
-                font-size: 14px;
                 padding: 10px 20px;
+                font-size: 16px;
             }
 
             #dancing-cat {
                 width: 80px;
             }
 
-            .highlight {
-                width: 90%;
+            #send-email-btn {
+                bottom: 150px;
             }
 
             #location {
                 bottom: 100px;
-            }
-
-            #fake-ad {
-                padding: 10px;
             }
         }
     </style>
@@ -235,129 +243,141 @@
 
     <!-- Header -->
     <header>
-        Futuristic Website - Powered by ChatGPT
+        Modern Website - Powered by ChatGPT
     </header>
 
-    <!-- Cat GIF -->
-    <img id="dancing-cat" src="images/dancing-cat.gif" alt="Dancing Cat">
+    <!-- Container for content -->
+    <div id="container">
+        <!-- Dancing Cat GIF -->
+        <img id="dancing-cat" src="images/dancing-cat.gif" alt="Dancing Cat">
 
-    <!-- Buttons Section -->
-    <div id="button-section" style="text-align: center; margin-top: 50px;">
-        <a href="https://example.com" class="btn">Files (COMING SOON)</a>
-        <a href="https://youtube.com" class="btn">YouTube</a>
-        <a href="https://google.com" class="btn">Google</a>
-        <a href="#" class="btn disabled">Country</a>
-        <a href="#" class="btn disabled">Cat</a>
-        <a href="#" class="btn disabled">Dog</a>
-        <a href="#" class="btn disabled">Fetch.io</a>
-        <a href="#" class="btn disabled">Meow.io</a>
-        <a href="#" class="btn disabled">Itch.io</a>
-        <a href="#" class="btn disabled">Mememememme.ll</a>
-    </div>
-
-    <!-- Highlight Section -->
-    <div class="highlight">
-        <h2>Highlighted Section</h2>
-        <p>Explore amazing content and features here.</p>
-    </div>
-
-    <div class="highlight">
-        <h2>Another Highlight</h2>
-        <p>Stay tuned for more updates and features!</p>
+        <!-- Modern Buttons -->
+        <div id="buttons">
+            <a href="https://example.com" class="btn">Files (COMING SOON)</a>
+            <a href="https://youtube.com" class="btn">YOUTUBE</a>
+            <a href="https://google.com" class="btn">Google</a>
+            <a href="#" class="btn disabled">Country</a>
+            <a href="#" class="btn disabled">Cat</a>
+            <a href="#" class="btn disabled">Dog</a>
+            <a href="#" class="btn disabled">Fetch.io</a>
+            <a href="#" class="btn disabled">Meow.io</a>
+            <a href="#" class="btn disabled">Itch.io</a>
+            <a href="#" class="btn disabled">Mememememme.ll</a>
+        </div>
     </div>
 
     <!-- Jumpscare -->
     <div id="jumpscare">
-        <button id="close-jumpscare">Close</button>
+        <button id="close-btn">Close</button>
         <img src="images/jumpscare-image.gif" alt="Jumpscare">
     </div>
 
     <!-- Fake Ad -->
     <div id="fake-ad">
-        Check out Amazon! <a href="https://amazon.com"><img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/amazon-512.png" alt="Amazon Logo">Visit Now</a>
+        <p>✨ Check out Amazon! ✨<a href="https://amazon.com"><img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/amazon-512.png" alt="Amazon Logo">Visit Now</a></p>
     </div>
 
-    <!-- Location Display -->
-    <div id="location">Locating your position...</div>
+    <!-- Location Text -->
+    <div id="location">Location: Unable to determine your IP location.</div>
+
+    <!-- Send Email Button -->
+    <button id="send-email-btn" onclick="openEmailPopup()">Send to My Email</button>
 
     <!-- Email Popup -->
     <div id="email-popup">
-        <h2>Contact Email</h2>
+        <h2>Email Address</h2>
         <p>jumppz.gt@gmail.com</p>
         <button onclick="closeEmailPopup()">Close</button>
     </div>
 
     <!-- Sound Effects -->
-    <audio id="button-sound" src="sounds/button-sound.mp3"></audio>
+    <audio id="button-sound" src="sounds/button-click.mp3"></audio>
     <audio id="jumpscare-sound" src="sounds/jumpscare-sound.mp3"></audio>
 
-    <!-- Script Section -->
+    <!-- Scripts -->
     <script>
-        // Show Jumpscare after 30 seconds
-        function initJumpscare() {
-            setTimeout(() => {
-                const jumpscare = document.getElementById('jumpscare');
-                jumpscare.classList.add('show');
-                jumpscare.style.display = 'flex';
-                document.getElementById('jumpscare-sound').play();
+        document.addEventListener('DOMContentLoaded', function () {
+            // Button Sound Effect
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    playSound('button-sound');
+                });
+            });
+
+            // Show Jumpscare after 30 seconds
+            setTimeout(function () {
+                showJumpscare();
             }, 30000);
+
+            // Fetch Location
+            fetchLocation();
+        });
+
+        // Function to Play Sound
+        function playSound(id) {
+            const sound = document.getElementById(id);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play();
+            }
         }
 
-        // Close Jumpscare
-        document.getElementById('close-jumpscare').addEventListener('click', function() {
+        // Function to Show Jumpscare
+        function showJumpscare() {
+            const jumpscare = document.getElementById('jumpscare');
+            jumpscare.classList.add('show');
+            playSound('jumpscare-sound');
+        }
+
+        // Function to Close Jumpscare
+        document.getElementById('close-btn').addEventListener('click', function () {
             const jumpscare = document.getElementById('jumpscare');
             jumpscare.classList.remove('show');
-            jumpscare.style.display = 'none';
-            document.getElementById('button-sound').play();
+            const jumpscareSound = document.getElementById('jumpscare-sound');
+            jumpscareSound.pause();
+            jumpscareSound.currentTime = 0;
         });
 
-        // Button Sound Effect
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', () => {
-                document.getElementById('button-sound').play();
-            });
-        });
+        // Function to Fetch Location
+        function fetchLocation() {
+            const locationElement = document.getElementById('location');
+            const apiURL = 'https://ipinfo.io/json?token=7ded7e30a2fa5e';
 
-        // Show Email Popup
+            fetch(apiURL)
+                .then(response => response.json())
+                .then(data => {
+                    locationElement.textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                    locationElement.classList.add('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching public IP location:', error);
+                    // Fallback IP
+                    const fallbackURL = 'https://ipinfo.io/8.8.8.8/json?token=7ded7e30a2fa5e';
+                    fetch(fallbackURL)
+                        .then(response => response.json())
+                        .then(data => {
+                            locationElement.textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                            locationElement.classList.add('show');
+                        })
+                        .catch(fallbackError => {
+                            console.error('Error with fallback IP:', fallbackError);
+                            locationElement.textContent = 'Location: Unable to determine your IP location.';
+                            locationElement.classList.add('show');
+                        });
+                });
+        }
+
+        // Function to Open Email Popup
         function openEmailPopup() {
             const emailPopup = document.getElementById('email-popup');
             emailPopup.classList.add('show');
-            document.getElementById('button-sound').play();
         }
 
-        // Close Email Popup
+        // Function to Close Email Popup
         function closeEmailPopup() {
             const emailPopup = document.getElementById('email-popup');
             emailPopup.classList.remove('show');
         }
-
-        // Fetch Location Using IP and API
-        function fetchLocation() {
-            const locationElement = document.getElementById('location');
-            locationElement.style.display = 'block';
-
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    const ip = data.ip;
-                    return fetch(`https://ipinfo.io/${ip}/json`);
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const locationText = `Location: ${data.city || 'Unknown City'}, ${data.region || 'Unknown Region'}, ${data.country || 'Unknown Country'}`;
-                    locationElement.textContent = locationText;
-                })
-                .catch(error => {
-                    console.error('Error fetching location:', error);
-                    locationElement.textContent = 'Unable to determine your location.';
-                });
-        }
-
-        // Initialize Everything
-        window.onload = function() {
-            initJumpscare();
-            fetchLocation();
-        };
     </script>
 </body>
 </html>
