@@ -42,21 +42,21 @@
             padding: 15px 30px;
             margin: 10px;
             border: none;
-            border-radius: 25px;
+            border-radius: 50px;
             background: linear-gradient(135deg, #00bfff, #1e90ff);
             color: white;
             font-size: 18px;
             text-decoration: none;
             cursor: pointer;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .btn:hover {
             background: linear-gradient(135deg, #1e90ff, #00bfff);
             transform: scale(1.1);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
         .btn:active {
@@ -68,8 +68,8 @@
         .highlight {
             background-color: rgba(224, 224, 224, 0.8);
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
             margin: 20px auto;
             max-width: 80%;
         }
@@ -102,6 +102,20 @@
             border: none;
             padding: 10px;
             cursor: pointer;
+        }
+
+        /* Fake Ad Styles */
+        #fake-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(51, 51, 51, 0.9);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
         }
 
         /* Responsive Design */
@@ -159,20 +173,28 @@
         <img src="images/jumpscare-image.gif" alt="Jumpscare">
     </div>
 
+    <!-- Fake Ad -->
+    <div id="fake-ad">
+        <p>✨ Check out our latest products! ✨</p>
+        <p><a href="https://example.com" style="color: #00bfff;">Visit Now</a></p>
+    </div>
+
     <!-- Sound Effects -->
     <audio id="button-sound" src="sounds/button-sound.mp3"></audio>
     <audio id="jumpscare-sound" src="sounds/jumpscare-sound.mp3"></audio>
 
     <!-- Scripts -->
     <script>
-        // Function to show jumpscare once
+        // Function to show jumpscare once after 30 seconds
         let jumpscareShown = false;
 
         function showJumpscare() {
             if (!jumpscareShown) {
-                document.getElementById('jumpscare').style.display = 'flex';
-                document.getElementById('jumpscare-sound').play();
-                jumpscareShown = true;
+                setTimeout(() => {
+                    document.getElementById('jumpscare').style.display = 'flex';
+                    document.getElementById('jumpscare-sound').play();
+                    jumpscareShown = true;
+                }, 30000); // 30 seconds
             }
         }
 
