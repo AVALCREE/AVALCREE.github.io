@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modern Website</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         /* Global Styles */
         body {
@@ -370,16 +369,27 @@
             document.getElementById('button-sound').play();
         }
 
-        // Update location text using a free API
+        // Update location text using a free API with public IP as fallback
         function updateLocation() {
             const locationElement = document.getElementById('location');
-            fetch('https://ipinfo.io/8.8.8.8/json?token=7ded7e30a2fa5e')
+            fetch('https://ipinfo.io/json')
                 .then(response => response.json())
                 .then(data => {
-                    locationElement.textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                    locationElement.textContent = `Location: ${data.city || 'Unknown City'}, ${data.region || 'Unknown Region'}, ${data.country || 'Unknown Country'}`;
                 })
                 .catch(() => {
-                    locationElement.textContent = 'Location: Unable to determine your IP location.';
+                    console.error('Error fetching public IP location. Trying fallback.');
+                    fetch('https://ipinfo.io/8.8.8.8/json?token=7ded7e30a2fa5e')
+                        .then(response => response.json())
+                        .then(data => {
+                            locationElement.textContent = `Location: ${data.city || 'Unknown City'}, ${data.region || 'Unknown Region'}, ${data.country || 'Unknown Country'}`;
+                        })
+                        .catch(() => {
+                            locationElement.textContent = 'Location: Unable to determine your IP location.';
+                        })
+                        .finally(() => {
+                            locationElement.classList.add('show');
+                        });
                 })
                 .finally(() => {
                     locationElement.classList.add('show');
