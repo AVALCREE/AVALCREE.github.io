@@ -91,6 +91,13 @@
             align-items: center;
             justify-content: center;
             z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #jumpscare.show {
+            display: flex;
+            opacity: 1;
         }
 
         #jumpscare img {
@@ -107,6 +114,11 @@
             border: none;
             padding: 10px;
             cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #close-btn:hover {
+            background: darkred;
         }
 
         /* Fake Ad Styles */
@@ -147,6 +159,12 @@
             border-radius: 5px;
             z-index: 1200;
             font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #location.show {
+            opacity: 1;
         }
 
         /* Send Email Button */
@@ -183,6 +201,14 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
             display: none;
             z-index: 1300;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        #email-popup.show {
+            display: block;
+            opacity: 1;
+            transform: translateX(-50%) scale(1.05);
         }
 
         #email-popup h2 {
@@ -279,9 +305,9 @@
     </div>
 
     <!-- Location Text -->
-    <div id="location">Location: Determining your IP...</div>
+    <div id="location">Location: Unable to determine your IP location.</div>
 
-        <!-- Send Email Button -->
+    <!-- Send Email Button -->
     <button id="send-email-btn" onclick="openEmailPopup()">Send to My Email</button>
 
     <!-- Email Popup -->
@@ -303,7 +329,7 @@
         function showJumpscare() {
             if (!jumpscareShown) {
                 setTimeout(() => {
-                    document.getElementById('jumpscare').style.display = 'flex';
+                    document.getElementById('jumpscare').classList.add('show');
                     document.getElementById('jumpscare-sound').play();
                     jumpscareShown = true;
                 }, 30000); // 30 seconds
@@ -315,7 +341,8 @@
 
         // Close jumpscare button functionality
         document.getElementById('close-btn').addEventListener('click', function() {
-            document.getElementById('jumpscare').style.display = 'none';
+            const jumpscare = document.getElementById('jumpscare');
+            jumpscare.classList.remove('show');
             document.getElementById('jumpscare-sound').pause();
             document.getElementById('jumpscare-sound').currentTime = 0; // Reset sound position
             document.getElementById('button-sound').play();
@@ -330,22 +357,20 @@
 
         // Function to open email popup
         function openEmailPopup() {
-            document.getElementById('email-popup').style.display = 'block';
+            const popup = document.getElementById('email-popup');
+            popup.classList.add('show');
         }
 
         // Function to close email popup
         function closeEmailPopup() {
-            document.getElementById('email-popup').style.display = 'none';
-        }
-
-        // Function to send email
-        function sendEmail() {
-            window.location.href = 'mailto:jumppz.gt@gmail.com';
+            const popup = document.getElementById('email-popup');
+            popup.classList.remove('show');
         }
 
         // Update location text (fallback solution)
         function updateLocation() {
             const locationElement = document.getElementById('location');
+            locationElement.classList.add('show');
             locationElement.textContent = 'Location: Unable to determine your IP location.';
         }
 
@@ -355,4 +380,3 @@
 
 </body>
 </html>
-
