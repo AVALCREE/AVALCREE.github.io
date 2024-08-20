@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Video Player</title>
+    <style>
+        video {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 20px auto;
+        }
+        #info {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <video id="videoPlayer" controls>
+        <source src="videos/trumpet.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div id="info">Press numbers 1 to 8 to jump to specific times in the video.</div>
+    <script>
+        const video = document.getElementById('videoPlayer');
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            let startTime = 0;
+            
+            switch (key) {
+                case '1':
+                    startTime = 15;
+                    break;
+                case '2':
+                    startTime = 30;
+                    break;
+                case '3':
+                    startTime = 35;
+                    break;
+                case '4':
+                    startTime = 60;
+                    break;
+                case '5':
+                    startTime = 75;
+                    break;
+                case '6':
+                    startTime = 90;
+                    break;
+                case '7':
+                    startTime = 105;
+                    break;
+                case '8':
+                    startTime = 120;
+                    break;
+                case '9':
+                    startTime = 135;
+                    break;
+            }
+
+            if (startTime > 0) {
+                video.currentTime = startTime;
+                video.play();
+            }
+        });
+    </script>
+</body>
+</html>
