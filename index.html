@@ -82,33 +82,35 @@
         /* Jumpscare Styles */
         #jumpscare {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: auto;
             background: rgba(0, 0, 0, 0.8);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            transform: translate(-50%, -50%) scale(0.1);
             opacity: 0;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 2000;
         }
 
         #jumpscare.show {
             display: flex;
+            transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
 
         #jumpscare img {
-            width: 300px;
+            width: 100%;
             height: auto;
         }
 
         #close-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            right: 10px;
             background: red;
             color: white;
             border: none;
@@ -190,9 +192,9 @@
         /* Email Popup Styles */
         #email-popup {
             position: fixed;
-            top: 20%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) scale(0.9);
+            transform: translate(-50%, -50%) scale(0.1);
             width: 300px;
             background: rgba(0, 0, 0, 0.9);
             color: white;
@@ -208,7 +210,7 @@
         #email-popup.show {
             display: block;
             opacity: 1;
-            transform: translateX(-50%) scale(1);
+            transform: translate(-50%, -50%) scale(1);
         }
 
         #email-popup h2 {
@@ -287,7 +289,7 @@
         </div>
 
         <!-- Additional Highlighted Sections -->
-                   <div class="highlight">
+        <div class="highlight">
             <h2>Another Section</h2>
             <p>More content goes here. Use this space to add more information or features.</p>
         </div>
@@ -346,11 +348,6 @@
             document.getElementById('jumpscare-sound').pause();
             document.getElementById('jumpscare-sound').currentTime = 0; // Reset sound position
             document.getElementById('button-sound').play();
-            // Add fade-out animation
-            jumpscare.style.opacity = '0';
-            setTimeout(() => {
-                jumpscare.style.display = 'none';
-            }, 500); // Match this with the CSS transition time
         });
 
         // Button click sound effect
@@ -377,7 +374,7 @@
         // Update location text using a free API
         function updateLocation() {
             const locationElement = document.getElementById('location');
-            fetch('https://ipinfo.io/json?token=<YOUR_FREE_API_KEY>')
+            fetch('https://ipinfo.io/8.8.8.8/json?token=7ded7e30a2fa5e')
                 .then(response => response.json())
                 .then(data => {
                     locationElement.textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
