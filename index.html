@@ -30,7 +30,7 @@
         /* Dancing Cat GIF */
         #dancing-cat {
             position: fixed;
-            bottom: 50px;
+            bottom: 60px; /* Adjusted to fit above the ad */
             right: 10px;
             width: 100px;
             z-index: 1100;
@@ -139,7 +139,7 @@
         /* Location Text Styles */
         #location {
             position: fixed;
-            bottom: 70px;
+            bottom: 150px;
             left: 10px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
@@ -152,7 +152,7 @@
         /* Send Email Button */
         #send-email-btn {
             position: fixed;
-            bottom: 120px;
+            bottom: 200px;
             left: 10px;
             padding: 15px 30px;
             background: #d9534f;
@@ -169,6 +169,40 @@
             background: #c9302c;
         }
 
+        /* Email Popup Styles */
+        #email-popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1300;
+        }
+
+        #email-popup h2 {
+            margin-top: 0;
+        }
+
+        #email-popup button {
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #email-popup button:hover {
+            background: darkred;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .btn {
@@ -182,6 +216,14 @@
 
             .highlight {
                 width: 90%;
+            }
+
+            #send-email-btn {
+                bottom: 150px;
+            }
+
+            #location {
+                bottom: 100px;
             }
         }
     </style>
@@ -239,8 +281,15 @@
     <!-- Location Text -->
     <div id="location">Location: Determining your IP...</div>
 
-    <!-- Send Email Button -->
-    <button id="send-email-btn" onclick="sendEmail()">Send to My Email</button>
+        <!-- Send Email Button -->
+    <button id="send-email-btn" onclick="openEmailPopup()">Send to My Email</button>
+
+    <!-- Email Popup -->
+    <div id="email-popup">
+        <h2>Email Address</h2>
+        <p>jumppz.gt@gmail.com</p>
+        <button onclick="closeEmailPopup()">Close</button>
+    </div>
 
     <!-- Sound Effects -->
     <audio id="button-sound" src="sounds/button-sound.mp3"></audio>
@@ -267,6 +316,8 @@
         // Close jumpscare button functionality
         document.getElementById('close-btn').addEventListener('click', function() {
             document.getElementById('jumpscare').style.display = 'none';
+            document.getElementById('jumpscare-sound').pause();
+            document.getElementById('jumpscare-sound').currentTime = 0; // Reset sound position
             document.getElementById('button-sound').play();
         });
 
@@ -277,11 +328,31 @@
             });
         });
 
+        // Function to open email popup
+        function openEmailPopup() {
+            document.getElementById('email-popup').style.display = 'block';
+        }
+
+        // Function to close email popup
+        function closeEmailPopup() {
+            document.getElementById('email-popup').style.display = 'none';
+        }
+
         // Function to send email
         function sendEmail() {
             window.location.href = 'mailto:jumppz.gt@gmail.com';
         }
+
+        // Update location text (fallback solution)
+        function updateLocation() {
+            const locationElement = document.getElementById('location');
+            locationElement.textContent = 'Location: Unable to determine your IP location.';
+        }
+
+        // Initial location update
+        updateLocation();
     </script>
 
 </body>
 </html>
+
