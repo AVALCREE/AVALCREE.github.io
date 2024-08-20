@@ -92,7 +92,7 @@
             justify-content: center;
             z-index: 2000;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
         #jumpscare.show {
@@ -192,7 +192,7 @@
             position: fixed;
             top: 20%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) scale(0.9);
             width: 300px;
             background: rgba(0, 0, 0, 0.9);
             color: white;
@@ -208,7 +208,7 @@
         #email-popup.show {
             display: block;
             opacity: 1;
-            transform: translateX(-50%) scale(1.05);
+            transform: translateX(-50%) scale(1);
         }
 
         #email-popup h2 {
@@ -287,7 +287,7 @@
         </div>
 
         <!-- Additional Highlighted Sections -->
-        <div class="highlight">
+                   <div class="highlight">
             <h2>Another Section</h2>
             <p>More content goes here. Use this space to add more information or features.</p>
         </div>
@@ -346,6 +346,11 @@
             document.getElementById('jumpscare-sound').pause();
             document.getElementById('jumpscare-sound').currentTime = 0; // Reset sound position
             document.getElementById('button-sound').play();
+            // Add fade-out animation
+            jumpscare.style.opacity = '0';
+            setTimeout(() => {
+                jumpscare.style.display = 'none';
+            }, 500); // Match this with the CSS transition time
         });
 
         // Button click sound effect
@@ -359,19 +364,30 @@
         function openEmailPopup() {
             const popup = document.getElementById('email-popup');
             popup.classList.add('show');
+            document.getElementById('button-sound').play();
         }
 
         // Function to close email popup
         function closeEmailPopup() {
             const popup = document.getElementById('email-popup');
             popup.classList.remove('show');
+            document.getElementById('button-sound').play();
         }
 
-        // Update location text (fallback solution)
+        // Update location text using a free API
         function updateLocation() {
             const locationElement = document.getElementById('location');
-            locationElement.classList.add('show');
-            locationElement.textContent = 'Location: Unable to determine your IP location.';
+            fetch('https://ipinfo.io/json?token=<YOUR_FREE_API_KEY>')
+                .then(response => response.json())
+                .then(data => {
+                    locationElement.textContent = `Location: ${data.city}, ${data.region}, ${data.country}`;
+                })
+                .catch(() => {
+                    locationElement.textContent = 'Location: Unable to determine your IP location.';
+                })
+                .finally(() => {
+                    locationElement.classList.add('show');
+                });
         }
 
         // Initial location update
