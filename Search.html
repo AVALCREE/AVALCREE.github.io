@@ -1,100 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Search Engine</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        input[type="text"] {
-            width: 80%;
-            padding: 10px;
-            font-size: 16px;
-        }
-        input[type="submit"] {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .results {
-            margin-top: 20px;
-            text-align: left;
-        }
-        .result-item {
-            margin-bottom: 15px;
-        }
-        .result-item h3 {
-            margin: 0;
-            font-size: 18px;
-        }
-        .result-item p {
-            margin: 5px 0 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Private Search Engine</h1>
-        <form id="searchForm">
-            <input type="text" id="searchQuery" placeholder="Enter search term..." required>
-            <input type="submit" value="Search">
-        </form>
-        <div class="results" id="results"></div>
-    </div>
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let query = document.getElementById('searchQuery').value;
+    fetchResults(query);
+});
 
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            let query = document.getElementById('searchQuery').value;
-            fetchResults(query);
+async function fetchResults(query) {
+    const apiKey = 'b992de47646fec74289d5b7057534867ce2a006f6723673c187aedc9bd470031';
+    const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=en&api_key=${apiKey}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Debugging: Log the entire response to see what you're getting
+        console.log('API Response:', data);
+
+        displayResults(data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function displayResults(data) {
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '';
+
+    // Check if the response contains organic results
+    if (data.organic_results && data.organic_results.length > 0) {
+        data.organic_results.forEach(result => {
+            const resultItem = document.createElement('div');
+            resultItem.classList.add('result-item');
+            
+            const title = document.createElement('h3');
+            title.innerHTML = `<a href="${result.link}" target="_blank">${result.title}</a>`;
+            
+            const snippet = document.createElement('p');
+            snippet.textContent = result.snippet || '';
+
+            resultItem.appendChild(title);
+            resultItem.appendChild(snippet);
+            resultsDiv.appendChild(resultItem);
         });
-
-        async function fetchResults(query) {
-            const apiKey = 'b992de47646fec74289d5b7057534867ce2a006f6723673c187aedc9bd470031';
-            const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=en&api_key=${apiKey}`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                displayResults(data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        function displayResults(data) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-
-            if (data.organic_results.length === 0) {
-                resultsDiv.innerHTML = '<p>No results found.</p>';
-                return;
-            }
-
-            data.organic_results.forEach(result => {
-                const resultItem = document.createElement('div');
-                resultItem.classList.add('result-item');
-                
-                const title = document.createElement('h3');
-                title.innerHTML = `<a href="${result.link}" target="_blank">${result.title}</a>`;
-                
-                const snippet = document.createElement('p');
-                snippet.textContent = result.snippet || '';
-
-                resultItem.appendChild(title);
-                resultItem.appendChild(snippet);
-                resultsDiv.appendChild(resultItem);
-            });
-        }
-    </script>
-</body>
-</html>
+    } else {
+        resultsDiv.innerHTML = '<p>No results found.</p>';
+    }
+}
