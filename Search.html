@@ -39,6 +39,32 @@
         .result-item p {
             margin: 5px 0 0;
         }
+        /* Popup styling */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
@@ -51,6 +77,14 @@
         <div class="results" id="results"></div>
     </div>
 
+    <!-- Popup and overlay -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <p>To use this search engine, you need to request temporary access to the CORS proxy.</p>
+        <p><a href="https://cors-anywhere.herokuapp.com/" target="_blank">Click here to request access</a></p>
+        <button id="closePopup">I have requested access</button>
+    </div>
+
     <script>
         document.getElementById('searchForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -61,14 +95,13 @@
         async function fetchResults(query) {
             const apiKey = 'b992de47646fec74289d5b7057534867ce2a006f6723673c187aedc9bd470031';
             const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=en&api_key=${apiKey}`;
+            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
             try {
-                const response = await fetch(url);
+                const response = await fetch(proxyUrl + url);
                 const data = await response.json();
 
-                // Debugging: Log the entire response to see what you're getting
                 console.log('API Response:', data);
-
                 displayResults(data);
             } catch (error) {
                 console.error('Error:', error);
@@ -79,7 +112,6 @@
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
-            // Check if the response contains organic results
             if (data.organic_results && data.organic_results.length > 0) {
                 data.organic_results.forEach(result => {
                     const resultItem = document.createElement('div');
@@ -99,6 +131,18 @@
                 resultsDiv.innerHTML = '<p>No results found.</p>';
             }
         }
+
+        // Handle the popup
+        document.getElementById('closePopup').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        });
+
+        // Show the popup when the page loads
+        window.onload = function() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        };
     </script>
 </body>
 </html>
