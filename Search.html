@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuckDuckGo Search Engine</title>
+    <title>Private Search Engine</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,7 +43,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>DuckDuckGo Search Engine</h1>
+        <h1>Private Search Engine</h1>
         <form id="searchForm">
             <input type="text" id="searchQuery" placeholder="Enter search term..." required>
             <input type="submit" value="Search">
@@ -58,35 +58,41 @@
             fetchResults(query);
         });
 
-        function fetchResults(query) {
-            const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&pretty=1`;
+        async function fetchResults(query) {
+            const apiKey = 'b992de47646fec74289d5b7057534867ce2a006f6723673c187aedc9bd470031';
+            const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=en&api_key=${apiKey}`;
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => displayResults(data))
-                .catch(error => console.error('Error:', error));
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                displayResults(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
         function displayResults(data) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
-            if (data.RelatedTopics.length === 0) {
+            if (data.organic_results.length === 0) {
                 resultsDiv.innerHTML = '<p>No results found.</p>';
                 return;
             }
 
-            data.RelatedTopics.forEach(topic => {
-                if (topic.FirstURL && topic.Text) {
-                    const resultItem = document.createElement('div');
-                    resultItem.classList.add('result-item');
-                    
-                    const title = document.createElement('h3');
-                    title.innerHTML = `<a href="${topic.FirstURL}" target="_blank">${topic.Text}</a>`;
-                    
-                    resultItem.appendChild(title);
-                    resultsDiv.appendChild(resultItem);
-                }
+            data.organic_results.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.classList.add('result-item');
+                
+                const title = document.createElement('h3');
+                title.innerHTML = `<a href="${result.link}" target="_blank">${result.title}</a>`;
+                
+                const snippet = document.createElement('p');
+                snippet.textContent = result.snippet || '';
+
+                resultItem.appendChild(title);
+                resultItem.appendChild(snippet);
+                resultsDiv.appendChild(resultItem);
             });
         }
     </script>
